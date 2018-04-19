@@ -12,5 +12,6 @@ test:
 
 deployment:
   testing:
+    branch: /.*/
     commands:
       - echo "Deployed!"
