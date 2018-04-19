@@ -1,19 +1,14 @@
-machine:
-  php:
-    version: 7.1.9
-  services:
-    - docker
-
-
-test:
-  override:
-    - exit 1 # failing test
-  post:
-    - exit 0 # successful things
-
-
-deployment:
-  testing:
-    branch: /.*/
-    commands:
-      - echo "Deployed!"
+version: 2
+jobs:
+  build:
+    steps:
+      - run:
+          name: Export Variables
+          command: |
+            export MY_RANDOM=string$RANDOM
+              echo $MY_RANDOM
+      - run:
+          name: Check it
+          when: always
+          command: |
+            echo $MY_RANDOM
