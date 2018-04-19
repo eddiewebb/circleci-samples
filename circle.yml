@@ -8,9 +8,13 @@ jobs:
           name: Export Variables
           command: |
             export MY_RANDOM=string$RANDOM
-              echo $MY_RANDOM
+            echo $MY_RANDOM
+            echo $MY_RANDOM > .cluster-id
       - run:
           name: Check it
           when: always
           command: |
-            echo $MY_RANDOM
+            echo "value: ${MY_RANDOM}"
+            MY_RANDOM=`cat cluster-id`
+            echo "value: ${MY_RANDOM}"
+          environment:
