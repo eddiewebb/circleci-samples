@@ -7,11 +7,12 @@ machine:
 
 test:
   override:
-    - exit 1 # failing tests
+    - exit 1 # failing test
     - exit 0 # successful things
 
 
 deployment:
   testing:
+    branch: /.*/
     commands:
       - echo "Deployed!"
