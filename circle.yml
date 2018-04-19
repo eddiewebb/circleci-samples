@@ -9,15 +9,10 @@ jobs:
           command: |
             export MY_RANDOM=string$RANDOM
             echo $MY_RANDOM
-            echo $MY_RANDOM > .cluster-id
             echo "export MY_RANDOM=$MY_RANDOM" >> $BASH_ENV
-            source $BASH_ENV
       - run:
           name: Check it
           when: always
           command: |
             source $BASH_ENV
             echo "value: ${MY_RANDOM}"
-            MY_RANDOM=`cat cluster-id`
-            echo "value: ${MY_RANDOM}"
-          environment:
