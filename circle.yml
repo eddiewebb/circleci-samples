@@ -1,0 +1,16 @@
+machine:
+  php:
+    version: 7.1.9
+  services:
+    - docker
+
+
+test:
+  override:
+    - exit 0 # successful things
+
+
+deployment:
+  testing:
+    commands:
+      - echo "Deployed!"
