@@ -16,5 +16,5 @@ jobs:
       - run:
           name: busy
           command: |
-            trap "echo stoping;sleep 30;echo stopped" EXIT
+            trap "echo stoping && sleep 30 && echo stopped" EXIT
             sleep 180
