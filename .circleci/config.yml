@@ -33,3 +33,11 @@ jobs:
             echo "fail command"
             sleep 20
             echo "fail done"
+
+      - run:
+          name: i dont think this is vali
+          when: on_cancel
+          command: |
+            echo "fail command"
+            sleep 20
+            echo "fail done"
