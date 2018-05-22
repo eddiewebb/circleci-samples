@@ -18,3 +18,18 @@ jobs:
           command: |
             trap "echo stoping && sleep 30 && echo stopped" EXIT
             sleep 180
+      - run:
+          name: always
+          when: always
+          command: |
+            echo "always command"
+            sleep 20
+            echo "always done"
+
+      - run:
+          name: fail
+          when: on_fail
+          command: |
+            echo "fail command"
+            sleep 20
+            echo "fail done"
