@@ -28,19 +28,17 @@ jobs:
       - image: circleci/python:2-jessie
     working_directory: ~/repo
     steps:
-      - add_ssh_keys
-      - run:
-          name: Keyscan Github (HACK)
-          command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - checkout
       - run:
           name: Merge latest from master
           command: |
+            set | grep CIRCLE
             if [ "x" != "x${CIRCLE_PULL_REQUEST}" ];then
               echo "Build is part of a PR, try merged build"
-              set | grep CIRCLE
               # in case of forked repos, this is not actually upstream..
               echo "Clone: git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git"
-              git clone git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
+              git checkout master
+              #git clone git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
               git merge origin/${CIRCLE_BRANCH}
               if [ $? -ne 0 ];then
                 echo "Merge fail, conflicts. Please merge latest form master manually"
