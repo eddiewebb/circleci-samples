@@ -1,33 +1,9 @@
-workflows:
-  version: 2
-  build-deploy:
-    jobs:
-      - provided_npm
-      - customized_npm
 
 version: 2
 jobs:
-  provided_npm:
+  build:
     docker:
-      - image: circleci/node:10.0.0-browsers
+      - image: circleci/python:2-jessie
     working_directory: ~/repo
     steps:
-      - run: git clone https://github.com/cBioPortal/cbioportal-frontend.git .
-      - run: npm install
-      - run: cat package-lock.json | grep 'http:' || echo "no non-ssl urls found"
-      - run: mkdir artifacts && cp package-lock.json artifacts/
-      - store_artifacts:
-            path: artifacts
-  customized_npm:
-    docker:
-      - image: circleci/node:10.0.0-browsers
-    working_directory: ~/repo
-    steps:
-      - run: git clone https://github.com/cBioPortal/cbioportal-frontend.git .
-      - run: sudo chown -R $(whoami) $(npm config get prefix)/{lib/node_modules,bin,share}
-      - run: npm install --global npm@6
-      - run: npm install --silent
-      - run: cat package-lock.json | grep 'http:' || echo "no non-ssl urls found"
-      - run: mkdir artifacts && cp package-lock.json artifacts/
-      - store_artifacts:
-            path: artifacts
+      - run: docker build -f Dockerfile -t eddie-image:123 .
