@@ -14,3 +14,6 @@ jobs:
       - run: git clone https://github.com/cBioPortal/cbioportal-frontend.git .
       - run: npm install
       - run: cat package-lock.json | grep 'http:'
+      - run: mkdir artifacts && cp package-lock.json artifacts/
+      - store_artifacts:
+            path: artifacts
