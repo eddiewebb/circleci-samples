@@ -13,7 +13,7 @@ jobs:
     steps:
       - run: git clone https://github.com/cBioPortal/cbioportal-frontend.git .
       - run: npm install
-      - run: cat package-lock.json | grep 'http:'
+      - run: cat package-lock.json | grep 'http:' || echo "no non-ssl urls found"
       - run: mkdir artifacts && cp package-lock.json artifacts/
       - store_artifacts:
             path: artifacts
