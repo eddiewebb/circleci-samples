@@ -18,7 +18,7 @@ jobs:
       - run: mkdir artifacts && cp package-lock.json artifacts/
       - store_artifacts:
             path: artifacts
-  provided_npm:
+  customized_npm:
     docker:
       - image: circleci/node:10.0.0-browsers
     working_directory: ~/repo
