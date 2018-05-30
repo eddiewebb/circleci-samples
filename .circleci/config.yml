@@ -7,4 +7,10 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: docker build -f Dockerfile -t eddie-image:123 .
+      - run: |
+          echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
+      - run: |
+          # note, if COMPARE_URL is empty, this runs against full log history
+          for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f1 | sort -u`; do
+             echo $folder
+          done
