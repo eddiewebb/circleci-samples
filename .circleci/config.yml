@@ -11,9 +11,12 @@ jobs:
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
       - run: |
           # note, if COMPARE_URL is empty, this runs against full log history
-          for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f1 | sort -u`; do
+          $PATTERN=proj_
+          for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`; do
              echo $folder
+             cat $folder/message
           done
+
 
   subsubfolders:
     docker:
@@ -28,6 +31,7 @@ jobs:
           PARENT=cookbooks
           for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`; do
              echo $PARENT/$folder
+             cat $PARENT/$folder/message
           done
 
 
