@@ -17,7 +17,7 @@ jobs:
             PATTERN=proj_
             CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`
             if [ -z "$CHANGES" ];then
-              for folder in ; do
+              for folder in $CHANGES; do
                  echo "$folder changed, build it"
                  cat $folder/message #this would be a call to specific testing, etc on changed directory
               done
@@ -31,7 +31,7 @@ jobs:
             PARENT=cookbooks
             CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`
             if [ -z "$CHANGES" ];then
-              for folder in ; do
+              for folder in $CHANGES; do
                  echo "$PARENT/$folder changed, build it"
                  cat $PARENT/$folder/message  #this would be a call to specific testing, etc on changed directory
               done
