@@ -16,8 +16,8 @@ jobs:
             # note, if COMPARE_URL is empty, this runs against full log history
             PATTERN=proj_
             CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`
-            test ! -z "$CHANGES" || echo "no changes"
-            
+            (test ! -z "$CHANGES" || echo "no changes")
+
       - run:
           name: Build any subdirectories in cookbooks folder
           command: |
