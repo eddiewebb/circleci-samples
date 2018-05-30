@@ -1,7 +1,7 @@
 
 version: 2
 jobs:
-  build:
+  subfolders:
     docker:
       - image: circleci/python:2-jessie
     working_directory: ~/repo
@@ -14,3 +14,26 @@ jobs:
           for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | cut -d"/" -f1 | sort -u`; do
              echo $folder
           done
+
+  subsubfolders:
+    docker:
+      - image: circleci/python:2-jessie
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: |
+          echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
+      - run: |
+          # note, if COMPARE_URL is empty, this runs against full log history
+          PARENT=cookbooks
+          for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`; do
+             echo $PARENT/$folder
+          done
+
+
+workflows:
+  version: 2
+  monorepo:
+    jobs:
+      - subfolders
+      - subsubfolders
