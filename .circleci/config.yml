@@ -16,15 +16,14 @@ jobs:
             # note, if COMPARE_URL is empty, this runs against full log history
             PATTERN=proj_
             CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`
-            echo ${CHANGES:-no changes detected}
-
+          
       - run:
           name: Build any subdirectories in cookbooks folder
           command: |
             # note, if COMPARE_URL is empty, this runs against full log history
             PARENT=cookbooks
             CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`
-            test ! -z "$CHANGES" || echo "no changes"
+            echo ${CHANGES:-no changes detected}
             for folder in $CHANGES; do
                echo "$PARENT/$folder changed, build it"
                cat $PARENT/$folder/message  #this would be a call to specific testing, etc on changed directory
