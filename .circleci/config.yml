@@ -15,10 +15,15 @@ jobs:
           command: |
             # note, if COMPARE_URL is empty, this runs against full log history
             PATTERN=proj_
-            for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`; do
-               echo $folder
-               cat $folder/message #this would be a call to specific testing, etc on changed directory
-            done
+            CHANGES=`git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`
+            if [ -z $CHANGES ];then
+              for folder in ; do
+                 echo $folder
+                 cat $folder/message #this would be a call to specific testing, etc on changed directory
+              done
+            else
+              echo "No top-level changes"
+            fi
       - run:
           name: Build any subdirectories in cookbooks folder
           command: |
