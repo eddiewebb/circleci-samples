@@ -14,7 +14,7 @@ jobs:
           PATTERN=proj_
           for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`; do
              echo $folder
-             cat $folder/message
+             cat $folder/message #this would be a call to specific testing, etc on changed directory
           done
 
 
@@ -31,7 +31,7 @@ jobs:
           PARENT=cookbooks
           for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`; do
              echo $PARENT/$folder
-             cat $PARENT/$folder/message
+             cat $PARENT/$folder/message  #this would be a call to specific testing, etc on changed directory
           done
 
 
