@@ -11,21 +11,30 @@ jobs:
       - run: |
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
       - run:
-          name: Build any top-level proj_ directories
+          name: slow stuff
           command: |
-            # note, if COMPARE_URL is empty, this runs against full log history
-            PATTERN=proj_
-            for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PATTERN | cut -d"/" -f1 | sort -u`; do
-               echo "$folder changed, build it"
-               cat $folder/message  #this would be a call to specific testing, etc on changed directory
-            done
+            sleep 60
 
-      - run:
-          name: Build any subdirectories in cookbooks folder
+  deploy:
+    # This job looks in a specific subfolder for any changes
+    docker:
+      - image: circleci/python:2-jessie
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: |
+          echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
+      - deploy:
+          name: Slow stuff
           command: |
-            # note, if COMPARE_URL is empty, this runs against full log history
-            PARENT=cookbooks
-            for folder in `git log --format="" --name-only ${CIRCLE_COMPARE_URL##http*/} | grep $PARENT | cut -d"/" -f2 | sort -u`; do
-               echo "$PARENT/$folder changed, build it"
-               cat $PARENT/$folder/message  #this would be a call to specific testing, etc on changed directory
-            done
+            sleep 60
+
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
