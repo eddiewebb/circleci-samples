@@ -20,7 +20,7 @@ jobs:
       - checkout
       - run: |
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
-      - deploy:
+      - run:
           name: Slow stuff
           command: |
             sleep 120
