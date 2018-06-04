@@ -10,10 +10,6 @@ jobs:
       - checkout
       - run: |
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
-      - run:
-          name: slow stuff
-          command: |
-            sleep 10
 
   deploy:
     # This job looks in a specific subfolder for any changes
