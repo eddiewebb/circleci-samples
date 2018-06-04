@@ -16,7 +16,7 @@ jobs:
     docker:
       - image: circleci/python:2-jessie
     working_directory: ~/repo
-    steps:
+    deploy:
       - checkout
       - run: |
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
