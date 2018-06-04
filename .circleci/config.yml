@@ -16,6 +16,8 @@ jobs:
     docker:
       - image: circleci/python:2-jessie
     working_directory: ~/repo
+    steps:
+      - run: echo "oh bother"
     deploy:
       - checkout
       - run: |
