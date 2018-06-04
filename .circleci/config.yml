@@ -13,7 +13,7 @@ jobs:
       - run:
           name: slow stuff
           command: |
-            sleep 60
+            sleep 10
 
   deploy:
     # This job looks in a specific subfolder for any changes
@@ -27,7 +27,7 @@ jobs:
       - deploy:
           name: Slow stuff
           command: |
-            sleep 60
+            sleep 120
 
 workflows:
   version: 2
