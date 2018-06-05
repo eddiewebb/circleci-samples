@@ -10,6 +10,7 @@ jobs:
       - checkout
       - run: |
           echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
+          echo "Secrets: ${SECRET}"
 
   deploy:
     # This job looks in a specific subfolder for any changes
@@ -32,7 +33,8 @@ workflows:
   version: 2
   build_deploy:
     jobs:
-      - build
+      - build:
+          context: 'New COntext on 2.12.01'
       - deploy:
           requires:
             - build
