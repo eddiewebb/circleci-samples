@@ -3,38 +3,23 @@ version: 2
 jobs:
   build:
     # This job looks in a specific subfolder for any changes
-    docker:
-      - image: circleci/python:2-jessie
-    working_directory: ~/repo
+    machine:
+      docker_layer_caching: true
     steps:
-      - checkout
+      - run: mkdir results
+      - run: docker images --format '{{.ID}} {{.Repository}} {{.Tag}}' > results/images
       - run: |
-          echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
-          echo "Secrets: ${SECRET}"
-
-  deploy:
-    # This job looks in a specific subfolder for any changes
-    docker:
-      - image: circleci/python:2-jessie
-    working_directory: ~/repo
-    steps:
-      - run: echo "oh bother"
-    deploy:
-      - checkout
+          while read IMAGE;do
+            echo "history for ${IMAGE}"
+            hash=`echo ${IMAGE} | cut -f1 -d" "`
+            docker history ${hash}
+          done<results/images
+      - run: docker volumes ls > results/volumes
       - run: |
-          echo "Using compare URL: ${CIRCLE_COMPARE_URL}"
-      - run:
-          name: Slow stuff
-          command: |
-            sleep 120
-
-
-workflows:
-  version: 2
-  build_deploy:
-    jobs:
-      - build:
-          context: 'New COntext on 2.12.01'
-      - deploy:
-          requires:
-            - build
+          while read IMAGE;do
+            echo "history for ${IMAGE}"
+            hash=`docker volume ls --format '{{.Name}} {{.Driver}}' | cut -f1 -d" "`
+            docker volume inspect ${hash}
+          done<results/volumes
+      - store_artifacts:
+          path: results
