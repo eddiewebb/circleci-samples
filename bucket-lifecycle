@@ -1,0 +1,44 @@
+{
+
+    "Rules": [
+        {
+            "Expiration": {
+                "Days": 5
+            },
+            "ID": "Workspaces",
+            "Filter": {
+                "Prefix": "global/caches"
+            },
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 5
+            }
+        },
+        {
+            "Expiration": {
+                "Days": 30
+            },
+            "ID": "Caches",
+            "Filter": {
+                "Prefix": "workflows/workspaces"
+            },
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 30
+            }
+        },
+        {
+            "Expiration": {
+                "Days": 10
+            },
+            "ID": "Raw Test Results",
+            "Filter": {
+                "Prefix": "raw-test-results"
+            },
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 10
+            }
+        }
+    ]
+}
