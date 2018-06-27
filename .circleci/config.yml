@@ -14,11 +14,11 @@ jobs:
             hash=`echo ${IMAGE} | cut -f1 -d" "`
             docker history ${hash}
           done<results/images
-      - run: docker volumes ls > results/volumes
+      - run: docker volume ls --format '{{.Name}} {{.Driver}}' > results/volumes
       - run: |
           while read IMAGE;do
             echo "history for ${IMAGE}"
-            hash=`docker volume ls --format '{{.Name}} {{.Driver}}' | cut -f1 -d" "`
+            hash=`echo ${IMAGE} | cut -f1 -d" "`
             docker volume inspect ${hash}
           done<results/volumes
       - store_artifacts:
