@@ -14,5 +14,4 @@ jobs:
       - save_cache:
           paths:
             - bigcache.file
-          key: 
-            - storage-test
+          key: storage-test
