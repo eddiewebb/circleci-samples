@@ -1,6 +1,7 @@
 version: 2
 
 workflows:
+  version: 2
   storage-test:
     jobs:
       - cache
