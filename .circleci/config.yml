@@ -1,0 +1,17 @@
+version: 2
+jobs:
+	build:
+    docker:
+      - image: circleci/openjdk:8-jdk
+    steps:
+      - restore_cache:
+          keys:
+            - storage-test
+      - run: ls -lah
+      - run: fallocate -l 200M bigcache.file
+      - run: ls -lah
+      - save_cache:
+          paths:
+            - bigcache.file
+          key: 
+            - storage-test
