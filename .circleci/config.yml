@@ -9,7 +9,7 @@ jobs:
           keys:
             - storage-test
       - run: ls -lah
-      - run: fallocate -l 200M bigcache.file
+      - run: dd if=/dev/zero of=./bigcache.file bs=4k iflag=fullblock,count_bytes count=200M
       - run: ls -lah
       - save_cache:
           paths:
