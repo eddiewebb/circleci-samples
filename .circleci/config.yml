@@ -57,7 +57,6 @@ jobs:
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-    steps:
       - attach_workspace:
           at: workspace 
       - run: ls -lah
