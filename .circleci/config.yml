@@ -4,61 +4,16 @@ workflows:
   version: 2
   storage-test:
     jobs:
-      - cache
-      - artifacts
-      - workspace-create
-      - workspace-consume:
-          requires:
-            - workspace-create
-
+      - many
 
 
 jobs:
-  cache:
+  many:
+    parallelism: 5
     docker:
       - image: circleci/openjdk:8-jdk
     steps:
-      - restore_cache:
-          keys:
-            - storage-test
-      - run: ls -lah
-      - run: dd if=/dev/zero of=./bigcache.file bs=4k iflag=fullblock,count_bytes count=200M
-      - run: ls -lah
-      - save_cache:
-          paths:
-            - bigcache.file
-          key: storage-test
-
-
-  artifacts:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - run: mkdir artifacts
-      - run: dd if=/dev/zero of=./artifacts/bigwartifact.file bs=4k iflag=fullblock,count_bytes count=200M
-      - run: ls -lah
-      - store_artifacts:
-          path: artifacts
-
-
-  workspace-create:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-      - run: mkdir workspace
-      - run: dd if=/dev/zero of=./workspace/bigworkspace.file bs=4k iflag=fullblock,count_bytes count=200M
-      - run: ls -lah
-      - persist_to_workspace:
-          root: workspace
-          paths:
-           - bigworkspace.file
-
-  workspace-consume:
-    docker:
-      - image: circleci/openjdk:8-jdk
-    steps:
-    steps:
-      - attach_workspace:
-          at: workspace 
-      - run: ls -lah
-      - run: ls -lah workspace
+      - hostname
+      - echo $CIRCLE_NODE_TOTAL
+      - echo $CIRCLE_NODE_INDEX
+      - set
