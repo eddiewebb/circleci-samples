@@ -16,5 +16,12 @@ jobs:
       - run:
           name: Create Remote Host
           command: |
-            docker-machine create eddie-remote-docker --driver amazonec2 --amazonec2-access-key ${AWS_ACCESS_KEY_ID} --amazonec2-secret-key ${AWS_SECRET_ACCESS_KEY} 
-            docker-machine env eddie-remote-docker
+            REMOTE_DOCKER_NAME=eddie-remote-docker
+            echo "export REMOTE_DOCKER_NAME=eddie-remote-docker" >> $BASH_ENV
+            docker-machine create ${REMOTE_DOCKER_NAME} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
+            eval $(docker-machine env ${REMOTE_DOCKER_NAME} --shell bash
+      - run:
+          name: Docker Build
+          command: |
+            eval $(docker-machine env ${REMOTE_DOCKER_NAME} --shell bash
+            docker build .
