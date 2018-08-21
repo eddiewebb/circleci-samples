@@ -16,17 +16,17 @@ jobs:
       - run:
           name: Create Remote Host
           command: |
-            docker-machine create ${CIRCLE_WORKFLOW_ID} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
-            eval $(docker-machine env ${CIRCLE_WORKFLOW_ID} --shell bash
+            docker-machine create docker-demo-${CIRCLE_BUILD_NUM} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
+            eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM} --shell bash
       - run:
           name: Docker Build
           command: |
-            eval $(docker-machine env ${CIRCLE_WORKFLOW_ID} --shell bash
+            eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM}} --shell bash
             docker build .
 
       - run:
           name: Docker Cleanup
           when: always
           command: |
-            docker-machine rm ${CIRCLE_WORKFLOW_ID}
+            docker-machine rm docker-demo-${CIRCLE_BUILD_NUM}
 
