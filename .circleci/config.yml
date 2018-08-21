@@ -16,12 +16,17 @@ jobs:
       - run:
           name: Create Remote Host
           command: |
-            REMOTE_DOCKER_NAME=eddie-remote-docker
-            echo "export REMOTE_DOCKER_NAME=eddie-remote-docker" >> $BASH_ENV
-            docker-machine create ${REMOTE_DOCKER_NAME} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
-            eval $(docker-machine env ${REMOTE_DOCKER_NAME} --shell bash
+            docker-machine create ${CIRCLE_WORKFLOW_ID} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
+            eval $(docker-machine env ${CIRCLE_WORKFLOW_ID} --shell bash
       - run:
           name: Docker Build
           command: |
-            eval $(docker-machine env ${REMOTE_DOCKER_NAME} --shell bash
+            eval $(docker-machine env ${CIRCLE_WORKFLOW_ID} --shell bash
             docker build .
+
+      - run:
+          name: Docker Cleanup
+          when: always
+          command: |
+            docker-machine rm ${CIRCLE_WORKFLOW_ID}
+
