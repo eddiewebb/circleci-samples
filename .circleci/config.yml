@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6
+    working_directory: ~/repo
+    steps:
+      - checkout
+
+      - run: 
+          name: Install Docker Machine
+          command: |
+            base=https://github.com/docker/machine/releases/download/v0.14.0 &&
+            curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
+            sudo install /tmp/docker-machine /usr/local/bin/docker-machine
+      - run:
+          name: Create Remote Host
+          command: |
+            docker-machine create eddie-remote-docker --driver amazonec2 --amazonec2-access-key ${AWS_ACCESS_KEY_ID} --amazonec2-secret-key ${AWS_SECRET_ACCESS_KEY} 
+            docker-machine env eddie-remote-docker
