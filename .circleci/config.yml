@@ -1,6 +1,33 @@
 version: 2
+
+workflows:
+  version: 2
+  remote_dockers:
+    jobs:
+      - docker-machine-aws
+      - docker-dind
+
+
+
 jobs:
-  build:
+  docker-dind:
+    docker:
+      - image: circleci/buildpack-deps:latest-dind
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: 
+          name: "Build a really basic docker image"
+          command: |
+            dockerfile=Dockerfile
+            echo "FROM alpine:latest" > $dockerfile
+            echo "RUN echo hello" >> $dockerfile
+            docker build -f $dockerfile --tag throwaway:$CIRCLE_BUILD_NUM .
+            docker run --rm throwaway:$CIRCLE_BUILD_NUM
+
+
+  docker-machine-aws:
     docker:
       - image: circleci/python:3.6
     working_directory: ~/repo
@@ -23,7 +50,6 @@ jobs:
           command: |
             eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM} --shell bash)
             docker build .
-
       - run:
           name: Docker Cleanup
           when: always
