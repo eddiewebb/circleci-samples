@@ -11,7 +11,7 @@ workflows:
             - assets_2
             - assets_1
 
-
+jobs:
   assets_1:
     docker: 
       - image: circleci/python:2-jessie
@@ -24,6 +24,7 @@ workflows:
           root: output_1
           paths:
            - message_1.txt
+
   assets_2:
     docker: 
       - image: circleci/python:2-jessie
