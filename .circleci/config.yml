@@ -2,55 +2,47 @@ version: 2
 
 workflows:
   version: 2
-  resource_class_jobs:
+  workspace:
     jobs:
-      - small
-      - medium
-      - medium+
-      - large
-      - xlarge
-      - 2xlarge
-      - 2xlarge+
+      - assets_1
+      - assets_2
+      - test_both:
+          requires:
+            - assets_2
+            - assets_1
 
 
+  assets_1:
+    docker: 
+      - image: circleci/python:2-jessie
+    steps:
+      - checkout
+      - run: |
+          mkdir output_1
+          echo "hello world" > output_1/message_1.txt
+      - persist_to_workspace:
+          root: output_1
+          paths:
+           - message_1.txt
+  assets_2:
+    docker: 
+      - image: circleci/python:2-jessie
+    steps:
+      - checkout
+      - run: |
+          mkdir output_2
+          echo "hello world" > output_2/message_2.txt
+      - persist_to_workspace:
+          root: output_2
+          paths:
+           - message_2.txt
 
-resource_job_defaults: &resource_job_defaults
-  docker:  [{image: 'circleci/ruby:2.4.1'}]
-  steps:
-    - run:
-        name: verify that job ran with the requested resource_class option
-        command: |
-          curl -k \
-          "$CIRCLE_HOSTNAME/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/realitycheck/$CIRCLE_BUILD_NUM?\
-          circle-token=$CIRCLE_TOKEN" | \
-          jq '.picard.resource_class.class' | grep $CIRCLE_JOB
-
-jobs:
-  # resource class jobs
-  small: # 1 vCPU, 2GB RAM
-    <<: *resource_job_defaults
-    resource_class: small
-
-  medium: # 2 vCPUs, 4GB RAM
-    <<: *resource_job_defaults
-    resource_class: medium
-
-  medium+: # 3 vCPUs, 6GB RAM
-    <<: *resource_job_defaults
-    resource_class: medium+
-
-  large: # 4 vCPUs, 8GB RAM
-    <<: *resource_job_defaults
-    resource_class: large
-
-  xlarge: # 8 vCPUs, 16GB RAM
-    <<: *resource_job_defaults
-    resource_class: xlarge
-
-  2xlarge: # 16 vCPUs, 32GB RAM ????????
-    <<: *resource_job_defaults
-    resource_class: 2xlarge
-
-  2xlarge+: # 20 vCPUs, 40GB RAM ????????
-    <<: *resource_job_defaults
-    resource_class: 2xlarge+
+  test_both:
+    docker: 
+      - image: circleci/python:2-jessie
+    steps:
+      - attach_workspace:
+          at: target 
+      - run: ls -la target
+      - run: cat target/message_1.txt
+      - run: cat target/message_2.txt
