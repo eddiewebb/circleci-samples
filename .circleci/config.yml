@@ -5,6 +5,7 @@ workflows:
   workspace:
     jobs:
       - assets_1
+      - assets_2
 
 jobs:
   assets_1:
