@@ -5,11 +5,6 @@ workflows:
   workspace:
     jobs:
       - assets_1
-      - assets_2
-      - test_both:
-          requires:
-            - assets_2
-            - assets_1
 
 jobs:
   assets_1:
