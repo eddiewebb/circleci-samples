@@ -24,4 +24,21 @@ jobs:
           aws s3 cp output_1/message_1.txt s3://not-writable/
           mkdir output_1
           echo "hello world" > output_1/message_1.txt
+  assets_2:
+    machine: true 
+    steps:
+      - checkout
+      - run: |
+          mkdir output_1
+          echo "hello world" > output_1/message_1.txt
+      - persist_to_workspace:
+          root: output_1
+          paths:
+           - message_1.txt
+      - run: |
+          sudo pip install awscli
+          aws s3 cp output_1/message_1.txt s3://not-writable/
+          mkdir output_1
+          echo "hello world" > output_1/message_1.txt
+
 
