@@ -12,6 +12,8 @@ jobs:
       - image: circleci/python:2-jessie
     steps:
       - run: sudo bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'
+      - run: cat /etc/resolv.conf
+      - run: docker run circleci/node:10.0.0-browsers cat /etc/resolv.conf
       - setup_remote_docker
       - run: docker run circleci/node:10.0.0-browsers cat /etc/resolv.conf
-      
+
