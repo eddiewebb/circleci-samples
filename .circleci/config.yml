@@ -11,8 +11,13 @@ jobs:
     docker: 
       - image: circleci/python:2-jessie
     steps:
+      # adding to local /etc/resolv.conf wont affect remote docker environment
       - run: sudo bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'
-      - run: cat /etc/resolv.conf
       - setup_remote_docker
+      - run: docker run circleci/node:10.0.0-browsers cat /etc/resolv.conf
+
+
+      # instead run a privileged container first to modify the remote host, then dns changes will be picked up by subseuent docker commands.
+      - run: docker run -v='/etc/resolv.conf:/host/etc/resolv.conf' circleci/node:10.0.0-browsers sudo sh -c 'echo nameserver 8.8.8.8 >> /host/etc/resolv.conf'
       - run: docker run circleci/node:10.0.0-browsers cat /etc/resolv.conf
 
