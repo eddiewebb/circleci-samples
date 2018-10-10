@@ -1,18 +1,16 @@
-version: 2.1
-
+version: 2
 workflows:
   version: 2
   workspace:
     jobs:
-      - primary_docker_dns2
+      - build
 
 jobs:
-
-
-  primary_docker_dns2:
+  build:
     docker: 
       - image: circleci/node:10
-        command: sudo sh -c 'echo nameserver 8.8.8.8 >> /etc/resolv.conf && /bin/bash'
+        command: sh -c 'sudo bash -c "echo nameserver 8.8.8.8 > /etc/resolv.conf" &&  /bin/bash'
     steps:
       - run: cat /etc/resolv.conf
-
+      - run: sudo apt-get install dnsutils
+      - run: nslookup google.com
