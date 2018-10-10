@@ -4,28 +4,24 @@ workflows:
   version: 2
   workspace:
     jobs:
-      - modify_etc_resolv
-      - modify_docker_run
+      - primary_docker_dns
+      - remote_docker_dns
 
 jobs:
-  modify_etc_resolv:
+  remote_docker_dns:
     docker: 
-      - image: circleci/python:2-jessie
-    steps:
-      # adding to local /etc/resolv.conf wont affect remote docker environment
-      - run: sudo bash -c 'echo "nameserver 8.8.8.8" >> /etc/resolv.conf'
-      - setup_remote_docker
-      - run: docker run circleci/node:10 cat /etc/resolv.conf
-
-
-      # instead run a privileged container first to modify the remote host, then dns changes will be picked up by subseuent docker commands.
-      - run: docker run -v='/etc/resolv.conf:/host/etc/resolv.conf' circleci/node:10 sudo sh -c 'echo nameserver 8.8.8.8 >> /host/etc/resolv.conf'
-      - run: docker run circleci/node:10 cat /etc/resolv.conf
-  modify_docker_run:
-    docker: 
-      - image: circleci/python:2-jessie
+      - image: circleci/node:10
     steps:
       - setup_remote_docker
       - run: docker run --dns=8.8.8.8 circleci/node:10 cat /etc/resolv.conf
       - run: docker run --dns-search=example.com circleci/node:10 cat /etc/resolv.conf
+
+  primary_docker_dns:
+    docker: 
+      - image: circleci/node:10
+        environment:
+          # use `docker inpsect <image-name>` to find existing command, and append as && to dns fix
+          - command: sudo sh -c 'echo nameserver 8.8.8.8 >> /etc/resolv.conf' && /bin/bash
+    steps:
+      - run: cat /etc/resolv.conf
 
