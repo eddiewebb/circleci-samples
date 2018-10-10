@@ -9,7 +9,9 @@ jobs:
   build:
     docker: 
       - image: circleci/node:10
-        command: sh -c 'sudo bash -c "echo nameserver 8.8.8.8 > /etc/resolv.conf" &&  /bin/bash'
+        command: 
+          - sudo bash -c "echo nameserver 8.8.8.8 > /etc/resolv.conf" 
+          - /bin/bash
     steps:
       - run: cat /etc/resolv.conf
       - run: sudo apt-get install dnsutils
