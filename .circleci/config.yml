@@ -5,8 +5,8 @@ workflows:
   workspace:
     jobs:
       - primary_docker_dns
+      - primary_docker_dns2
       - remote_docker_dns
-      - remote_docker_dns2
 
 jobs:
   remote_docker_dns:
