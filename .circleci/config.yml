@@ -4,33 +4,15 @@ workflows:
   version: 2
   workspace:
     jobs:
-      - primary_docker_dns
       - primary_docker_dns2
-      - remote_docker_dns
 
 jobs:
-  remote_docker_dns:
-    docker: 
-      - image: circleci/node:10
-    steps:
-      - setup_remote_docker
-      - run: docker run --dns=8.8.8.8 circleci/node:10 cat /etc/resolv.conf
-      - run: docker run --dns-search=example.com circleci/node:10 cat /etc/resolv.conf
-
-  primary_docker_dns:
-    docker: 
-      - image: circleci/node:10
-        command: 
-          - sudo sh -c 'echo nameserver 8.8.8.8 >> /etc/resolv.conf.tail'
-          - /bin/bash
-    steps:
-      - run: cat /etc/resolv.conf
 
 
   primary_docker_dns2:
     docker: 
       - image: circleci/node:10
-        command: sudo sh -c 'echo nameserver 8.8.8.8 >> /etc/resolv.conf.tail && /bin/bash'
+        command: sudo sh -c 'echo nameserver 8.8.8.8 >> /etc/resolv.conf && /bin/bash'
     steps:
       - run: cat /etc/resolv.conf
 
