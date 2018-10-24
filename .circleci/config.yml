@@ -4,7 +4,7 @@ workflows:
   version: 2
   remote_dockers:
     jobs:
-      - docker-machine-aws
+      #- docker-machine-aws
       - docker-dind
 
 
@@ -12,11 +12,13 @@ workflows:
 jobs:
   docker-dind:
     docker:
-      - image: circleci/buildpack-deps:latest-dind
+      - image: circleci/node:10
     working_directory: ~/repo
     steps:
       - checkout
+      - run: dockerd || true
       - setup_remote_docker
+      - run: dockerd || true
       - run: 
           name: "Build a really basic docker image"
           command: |
