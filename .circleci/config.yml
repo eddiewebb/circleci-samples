@@ -1,61 +1,35 @@
-version: 2
+version: 2.1
 
 workflows:
-  version: 2
-  remote_dockers:
+  monorepo:
     jobs:
-      #- docker-machine-aws
-      - docker-dind
+      - sample/dummy:
+          name: Security go
+      - sample/dummy:
+          name: API node
+      - sample/dummy:
+          name: UI node
+      - sample/dummy:
+          name: Integration
+          requires:
+            - Security go
+            - API node
+            - UI node
+      - Approval:
+          type: approval
+          requires:
+            - Integration
+      - sample/dummy:
+          name: Deploy
+          requires:
+            - Approval
 
 
-
-jobs:
-  docker-dind:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: dockerd || true
-      - setup_remote_docker
-      - run: dockerd || true
-      - run: 
-          name: "Build a really basic docker image"
-          command: |
-            dockerfile=Dockerfile
-            echo "FROM alpine:latest" > $dockerfile
-            echo "RUN echo hello" >> $dockerfile
-            docker build -f $dockerfile --tag throwaway:$CIRCLE_BUILD_NUM .
-            docker run --rm throwaway:$CIRCLE_BUILD_NUM
-
-
-  docker-machine-aws:
-    docker:
-      - image: circleci/python:3.6
-    working_directory: ~/repo
-    steps:
-      - checkout
-
-      - run: 
-          name: Install Docker Machine
-          command: |
-            base=https://github.com/docker/machine/releases/download/v0.14.0 &&
-            curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine &&
-            sudo install /tmp/docker-machine /usr/local/bin/docker-machine
-      - run:
-          name: Create Remote Host
-          command: |
-            docker-machine create docker-demo-${CIRCLE_BUILD_NUM} --driver amazonec2 --amazonec2-subnet-id ${AWS_SUBNET_ID} --amazonec2-vpc-id ${AWS_VPC_ID} --amazonec2-region us-east-2
-            eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM} --shell bash)
-      - run:
-          name: Docker Build
-          command: |
-            eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM} --shell bash)
-            docker build .
-      - run:
-          name: Docker Cleanup
-          when: always
-          command: |
-            eval $(docker-machine env docker-demo-${CIRCLE_BUILD_NUM} --shell bash)
-            docker-machine rm docker-demo-${CIRCLE_BUILD_NUM} --force
-
+orbs:
+  sample:
+    jobs: 
+      dummy:
+        docker:
+        - image: circleci/node:10
+        steps:
+          - run: echo "running"
