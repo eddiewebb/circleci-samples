@@ -1,34 +1,105 @@
-version: 2.1
-
+version: 2
+jobs:
+  build_staging:
+    docker:
+    - image: registry.riskxint.com/circleci/nodejs:8.11.3
+      user: riskified
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - deps-{{ checksum "package-lock.json" }}
+        - deps
+    - run:
+        name: Deps
+        command: npm install
+    - save_cache:
+        key: deps-{{ checksum "package-lock.json" }}
+        paths:
+        - node_modules
+    - run:
+        name: compile
+        command: npm run staging
+    - run:
+        name: package
+        command: tar czf ato-cockpit-staging.tgz -C dist .
+    - persist_to_workspace:
+        root: ./
+        paths:
+        - ato-cockpit-staging.tgz
 workflows:
-  monorepo:
+  version: 2
+  build_and_deploy_staging:
     jobs:
-      - sample/dummy:
-          name: Security go
-      - sample/dummy:
-          name: API node
-      - sample/dummy:
-          name: UI node
-      - sample/dummy:
-          name: Integration
-          requires:
-            - Security go
-            - API node
-            - UI node
-      - Approval:
-          type: approval
-          requires:
-            - Integration
-      - sample/dummy:
-          name: Deploy
-          requires:
-            - Approval
+    - build_staging:
+        filters:
+          branches:
+            only: deploy
 
-orbs:
-  sample:
-    jobs: 
-      dummy:
-        docker:
-        - image: circleci/node:10
-        steps:
-          - run: echo "running"
+# Original config.yml file:
+# version: 2.1
+# 
+# commands:
+#   release:
+#     description: \"Builds the ATO cockpit assets\"
+#     parameters:
+#       task:
+#         type: string
+#       save_cache:
+#         type: boolean
+#         default: false
+#     steps:
+#       - checkout
+#       - restore_cache:
+#           keys:
+#             - deps-{{ checksum \"package-lock.json\" }}
+#             - deps
+#       - run:
+#           name: Deps
+#           command: npm install
+#       - when:
+#           condition:  << parameters.save_cache >>
+#           steps:
+#             - save_cache:
+#                 key: deps-{{ checksum \"package-lock.json\" }}
+#                 paths:
+#                   - node_modules
+#       - run:
+#           name: compile
+#           command: npm run staging
+#       - run:
+#           name: package
+#           command: tar czf ato-cockpit-<< parameters.task >>.tgz -C dist .
+#       - persist_to_workspace:
+#           root: ./
+#           paths:
+#             - ato-cockpit-staging.tgz
+# 
+# executors:
+#   build:
+#     docker:
+#       - image: registry.riskxint.com/circleci/nodejs:8.11.3
+#         user: riskified
+# 
+# jobs:
+#   build_staging:
+#     executor: build
+#     steps:
+#       - release:
+#           task: staging
+#           save_cache: true
+#   build_production:
+#     executor: build
+#     steps:
+#       - release:
+#           task: production
+#           save_cache: false
+# 
+# workflows:
+#   version: 2
+#   build_and_deploy_staging:
+#     jobs:
+#       - build_staging:
+#           filters:
+#             branches:
+#               only: deploy
