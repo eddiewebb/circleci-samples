@@ -2,7 +2,7 @@ version: 2
 jobs:
   build_staging:
     docker:
-    - image: circleci/nodejs:8.11.3
+    - image: circleci/node:10
     steps:
     - checkout
     - restore_cache:
