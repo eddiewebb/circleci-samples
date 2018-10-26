@@ -2,8 +2,7 @@ version: 2
 jobs:
   build_staging:
     docker:
-    - image: registry.riskxint.com/circleci/nodejs:8.11.3
-      user: riskified
+    - image: circleci/nodejs:8.11.3
     steps:
     - checkout
     - restore_cache:
@@ -31,11 +30,7 @@ workflows:
   version: 2
   build_and_deploy_staging:
     jobs:
-    - build_staging:
-        filters:
-          branches:
-            only: deploy
-
+    - build_staging
 # Original config.yml file:
 # version: 2.1
 # 
