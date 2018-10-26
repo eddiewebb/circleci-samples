@@ -9,8 +9,7 @@ workflows:
           name: API node
       - sample/dummy:
           name: UI node
-      - sample/dummy:
-          name: Integration
+      - integration:
           requires:
             - Security go
             - API node
@@ -18,13 +17,14 @@ workflows:
       - Approval:
           type: approval
           requires:
-            - Integration
-      - deploy:
+            - integration
+      - sample/dummy:
+          name: Deploy
           requires:
             - Approval
 
 jobs:
-  deploy:
+  integration:
     docker:
       - image: circleci/golang:1.11-stretch-node-browsers
       - image: circleci/redis:4.0.11-alpine
