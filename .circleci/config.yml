@@ -19,10 +19,36 @@ workflows:
           type: approval
           requires:
             - Integration
-      - sample/dummy:
-          name: Deploy
+      - deploy:
           requires:
             - Approval
+
+jobs:
+  deploy:
+    docker:
+      - image: circleci/golang:1.11-stretch-node-browsers
+      - image: circleci/postgres:9.6.2-alpine
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle-test_test
+    steps:
+      - checkout
+      - run: node -v
+      - run: go version
+      # restore cache can yse a key unique to this job, or restore cache created by previous jobs.
+      # you can incude several, one for each language
+      - restore_cache:
+          keys:
+            - v1-pkg-cache
+      - run:
+          name: Wait for DB
+          # preinstalled in circleci/* docker image
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 120s
+      - run: echo "run some tests" # all your tests
+      - save_cache:
+          key: v1-pkg-cache
+          paths:
+            - "/go/pkg"
 
 orbs:
   sample:
