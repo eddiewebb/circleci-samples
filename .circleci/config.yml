@@ -1,65 +1,16 @@
-version: 2.1
-
-workflows:
-  monorepo:
-    jobs:
-      - sample/dummy:
-          name: Security go
-      - sample/dummy:
-          name: API node
-      - sample/dummy:
-          name: UI node
-      - integration:
-          requires:
-            - Security go
-            - API node
-            - UI node
-      - Approval:
-          type: approval
-          requires:
-            - integration
-      - sample/dummy:
-          name: Deploy
-          requires:
-            - Approval
+version: 2
 
 jobs:
-  integration:
+  build:
     docker:
-      - image: circleci/golang:1.11-stretch-node-browsers
-      - image: circleci/redis:4.0.11-alpine
-      - image: circleci/postgres:9.6.2-alpine
-        environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: circle-test_test
+      - image: circleci/node:10
     steps:
       - checkout
-      - run: node -v
-      - run: go version
-      # restore cache can yse a key unique to this job, or restore cache created by previous jobs.
-      # you can incude several, one for each language
-      - restore_cache:
-          keys:
-            - v1-pkg-cache
-      - run:
-          name: Wait for Postgres
-          # preinstalled in circleci/* docker image
-          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 120s
-      - run:
-          name: Wait for Redis
-          # preinstalled in circleci/* docker image
-          command: dockerize -wait tcp://localhost:6379 -timeout 1m
-      - run: echo "run some tests" # all your tests
-      - save_cache:
-          key: v1-pkg-cache
-          paths:
-            - "/go/pkg"
-
-orbs:
-  sample:
-    jobs: 
-      dummy:
-        docker:
-        - image: circleci/node:10
-        steps:
-          - run: echo "running"
+      - add_ssh_keys
+      - run: |
+          mkdir -p ~/.ssh
+          echo "18.191.19.150 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g=" >> ~/.ssh/known_hosts
+          echo "ec2-18-191-19-150.us-east-2.compute.amazonaws.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g=" >> ~/.ssh/known_hosts
+      - run: ssh -L 9001:104.154.89.105:80 -Nf ubuntu@ec2-18-191-19-150.us-east-2.compute.amazonaws.com
+      - run: curl localhost:9001
+  
