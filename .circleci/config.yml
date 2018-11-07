@@ -11,6 +11,6 @@ jobs:
           mkdir -p ~/.ssh
           echo "18.191.19.150 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g=" >> ~/.ssh/known_hosts
           echo "ec2-18-191-19-150.us-east-2.compute.amazonaws.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g=" >> ~/.ssh/known_hosts
-      - run: ssh -L 9001:104.154.89.105:80 -Nf ubuntu@ec2-18-191-19-150.us-east-2.compute.amazonaws.com
+      - run: ssh -L 9001:104.154.89.105:80 -Nf ubuntu@ec2-18-191-19-150.us-east-2.compute.amazonaws.com || true
       - run: curl localhost:9001
   
