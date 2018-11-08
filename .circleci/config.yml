@@ -3,6 +3,13 @@ version: 2.1
 orbs:
   dmz: eddiewebb/dmz@dev:local
 
+workflows:
+  test_all:
+    jobs:
+      - build
+      - build_key_path
+      - build_key_value
+      
 jobs:
   build:
     docker:
@@ -15,6 +22,36 @@ jobs:
           target_port: "80"
           bastion_user: ubuntu
           bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com 
+      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
+      - run: curl localhost:9001
+  
+  build_key_path:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - dmz/open_tunnel:
+          local_port: "9001"
+          target_host: "104.154.89.105"
+          target_port: "80"
+          bastion_user: ubuntu
+          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
+          bastion_public_key: bastion.pub
+      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
+      - run: curl localhost:9001
+  
+  build_key_value:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - dmz/open_tunnel:
+          local_port: "9001"
+          target_host: "104.154.89.105"
+          target_port: "80"
+          bastion_user: ubuntu
+          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
+          bastion_public_key: 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g='
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: curl localhost:9001
   
