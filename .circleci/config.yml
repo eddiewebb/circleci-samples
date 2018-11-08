@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  dmz: eddiewebb/dmz@dev:local
+  dmz: eddiewebb/dmz@volatile
 
 workflows:
   test_all:
