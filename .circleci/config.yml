@@ -23,6 +23,7 @@ jobs:
           target_port: "80"
           bastion_user: ubuntu
           bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com 
+      - run: cat ~/.ssh/known_hosts
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: curl localhost:9001
   
@@ -38,6 +39,7 @@ jobs:
           bastion_user: ubuntu
           bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
           bastion_public_key: bastion.pub
+      - run: cat ~/.ssh/known_hosts
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: curl localhost:9001
   
@@ -53,6 +55,7 @@ jobs:
           bastion_user: ubuntu
           bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
           bastion_public_key: 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g='
+      - run: cat ~/.ssh/known_hosts
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: curl localhost:9001
   
@@ -68,6 +71,7 @@ jobs:
           bastion_user: ubuntu
           bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
           bastion_public_key: ${BASTION_PUBLIC_KEY}
+      - run: cat ~/.ssh/known_hosts
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: curl localhost:9001
   
