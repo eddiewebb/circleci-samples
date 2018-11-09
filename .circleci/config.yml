@@ -23,6 +23,7 @@ jobs:
       # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
       - run: |
           ssh-add ~/.ssh/id_rsa*
+          ssh-keyscan localhost -p 9022 >> ~/.ssh/known_hosts
           ssh ec2-user@localhost -p 9022 'whoami && hostname'
   
   build: # this job uses ssh-keyscan to dynamically trust public key of bastion host
