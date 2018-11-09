@@ -6,12 +6,25 @@ orbs:
 workflows:
   test_all:
     jobs:
-      - build
-      - build_key_path
-      - build_key_value
-      - build_key_variable
+      - remote_ssh
 
 jobs:
+  remote_ssh:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - dmz/open_tunnel:
+          local_port: "9022"
+          target_host: "10.0.1.102"  #private IP only available from jump-host
+          target_port: "22"
+          bastion_user: ubuntu
+          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com 
+      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
+      - run: |
+          ssh-add ~/.ssh/id_rsa*
+          ssh ec2-user@localhost -p 9022 'whoami && hostname'
+  
   build: # this job uses ssh-keyscan to dynamically trust public key of bastion host
     docker:
       - image: circleci/node:10
