@@ -6,7 +6,6 @@ jobs:
     steps:
     - checkout
     - run:
-        background: true
         command: "# debian and ubuntu *(perhaps others) basic awk does not have functions\
           \ we need insralling gawk replaces awk\nsudo apt-get -y update && sudo apt-get\
           \ -y install gawk || true  \n"
@@ -18,7 +17,7 @@ jobs:
           watch -t "sudo ps -Aorss,%cpu | sed '1d'  | awk '{mem += \$1;cpu += \$2}END{tmem = mem / 1024;tcpu = cpu / 1024; ts = strftime("'"'"%m/%d/%Y %H:%M:%S"'"'"); printf "'"%s %.2f MB, %.2f %\n"'", ts, tmem, tcpu}' >> circleci-stats/stats.txt"
         name: Start background stats
     - run:
-        command: sudo apt-get update && sudo apt-get install -y stress
+        command: sudo apt-get -y update && sudo apt-get -y install stress
     - run:
         command: stress --vm 4 --timeout 30
     - run:
