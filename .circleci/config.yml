@@ -1,94 +1,136 @@
-version: 2.1
-
-orbs:
-  dmz: eddiewebb/dmz@volatile
-
-workflows:
-  test_all:
-    jobs:
-      - remote_ssh
-      - build
-      - build_key_path
-      - build_key_value
-      - build_key_variable
-
+version: 2
 jobs:
-  remote_ssh:
+  stats/with_stats:
     docker:
-      - image: circleci/node:10
+    - image: circleci/node:10
     steps:
-      - checkout
-      - dmz/open_tunnel:
-          local_port: "9022"
-          target_host: "10.0.1.102"  #private IP only available from jump-host
-          target_port: "22"
-          bastion_user: ubuntu
-          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com 
-      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
-      - run: |
-          ssh-keyscan -p 9022 localhost >> ~/.ssh/known_hosts
-          ssh ec2-user@localhost -p 9022 'whoami && hostname'
-  
-  build: # this job uses ssh-keyscan to dynamically trust public key of bastion host
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - dmz/open_tunnel:
-          local_port: "9001"
-          target_host: "104.154.89.105"
-          target_port: "80"
-          bastion_user: ubuntu
-          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com 
-      - run: cat ~/.ssh/known_hosts
-      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
-      - run: curl localhost:9001
-  
-  build_key_path: #this job uses a *public* key file within the repo to be explicitly trusted
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - dmz/open_tunnel:
-          local_port: "9001"
-          target_host: "104.154.89.105"
-          target_port: "80"
-          bastion_user: ubuntu
-          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
-          bastion_public_key: bastion.pub
-      - run: cat ~/.ssh/known_hosts
-      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
-      - run: curl localhost:9001
-  
-  build_key_value: # this job uses a public key string value to trust bastion explicitly
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - dmz/open_tunnel:
-          local_port: "9001"
-          target_host: "104.154.89.105"
-          target_port: "80"
-          bastion_user: ubuntu
-          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
-          bastion_public_key: 'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEQonlo27Q6jHMBHm7FczYsVbSDMMejUCZmSTcloE2DrDNfL/fzbzNlP5Xk8MxqRfjrPEsrlvRlyNYSxDLVA+0g='
-      - run: cat ~/.ssh/known_hosts
-      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
-      - run: curl localhost:9001
-  
-  build_key_variable: # this job uses a public key string value to trust bastion explicitly
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - dmz/open_tunnel:
-          local_port: "9001"
-          target_host: "104.154.89.105"
-          target_port: "80"
-          bastion_user: ubuntu
-          bastion_host: ec2-18-191-19-150.us-east-2.compute.amazonaws.com
-          bastion_public_key: ${BASTION_PUBLIC_KEY}
-      - run: cat ~/.ssh/known_hosts
-      # and simply confirm that accessing local port resolves the target (in this case an HTTP server)
-      - run: curl localhost:9001
-  
+    - checkout
+    - run:
+        background: true
+        command: "# debian and ubuntu *(perhaps others) basic awk does not have functions\
+          \ we need insralling gawk replaces awk\nsudo apt-get -y update && sudo apt-get\
+          \ -y install gawk || true  \n"
+        name: Install/Confirm utilitis (gawk, )
+    - run:
+        background: true
+        command: |
+          mkdir -p circleci-stats
+          watch -t "sudo ps -Aorss,%cpu | sed '1d'  | awk '{mem += \$1;cpu += \$2}END{tmem = mem / 1024;tcpu = cpu / 1024; ts = strftime("'"'"%m/%d/%Y %H:%M:%S"'"'"); printf "'"%s %.2f MB, %.2f %\n"'", ts, tmem, tcpu}' >> circleci-stats/stats.txt"
+        name: Start background stats
+    - run:
+        command: sudo apt-get update && sudo apt-get install -y stress
+    - run:
+        command: stress --vm 4 --timeout 30
+    - run:
+        command: |
+          awk 'function bigger(val,max){if(val > max){return val}else{return max}}{hmem=bigger($3,hmem);hcpu=bigger($5,hcpu)}END{printf "Highest values:\nMemory:\t%.2f\nCPU:\t%.2f\n",hmem,hcpu}' circleci-stats/stats.txt
+        name: Stats Summary
+    - run:
+        command: |
+          cat circleci-stats/*
+        name: Print background stats
+    - store_artifacts:
+        path: circleci-stats
+workflows:
+  stress_stats:
+    jobs:
+    - stats/with_stats
+  version: 2
+
+# Original config.yml file:
+# version: 2.1
+# orbs:
+#   stats:
+#     commands:
+#       expose_stats:
+#         parameters:
+#           stats_path:
+#             default: circleci-stats
+#             description: the relative or absolute directory for stats reports.
+#             type: string
+#         steps:
+#         - run:
+#             command: |
+#               awk 'function bigger(val,max){if(val > max){return val}else{return max}}{hmem=bigger($3,hmem);hcpu=bigger($5,hcpu)}END{printf \"Highest values:\\nMemory:\\t%.2f\\nCPU:\\t%.2f\\n\",hmem,hcpu}' <<parameters.stats_path>>/stats.txt
+#             name: Stats Summary
+#         - run:
+#             command: |
+#               cat <<parameters.stats_path>>/*
+#             name: Print background stats
+#         - store_artifacts:
+#             path: <<parameters.stats_path>>
+#       start_stats:
+#         parameters:
+#           stats_path:
+#             default: circleci-stats
+#             description: the relative or absolute directory for stats reports.
+#             type: string
+#         steps:
+#         - run:
+#             background: true
+#             command: \"# debian and ubuntu *(perhaps others) basic awk does not have functions
+#               we need insralling gawk replaces awk\\nsudo apt-get -y update && sudo apt-get
+#               -y install gawk || true  \\n\"
+#             name: Install/Confirm utilitis (gawk, )
+#         - run:
+#             background: true
+#             command: |
+#               mkdir -p <<parameters.stats_path>>
+#               watch -t \"sudo ps -Aorss,%cpu | sed '1d'  | awk '{mem += \\$1;cpu += \\$2}END{tmem = mem / 1024;tcpu = cpu / 1024; ts = strftime(\"'\"'\"%m/%d/%Y %H:%M:%S\"'\"'\"); printf \"'\"%s %.2f MB, %.2f %\\n\"'\", ts, tmem, tcpu}' >> <<parameters.stats_path>>/stats.txt\"
+#             name: Start background stats
+#     description: Allows CircleCI builds to access private network services over a intermediate
+#       jump host using SSH port forwarding.
+#     examples:
+#       providing_key_as_path:
+#         description: Install stress and use memory
+#         usage:
+#           orbs:
+#             stats: eddiewebb/stats@volatile
+#           version: 2.1
+#           workflows:
+#             stress_stats:
+#               jobs:
+#               - stats/with_stats:
+#                   job_steps:
+#                   - run: sudo apt-get update  && sudo apt-get -y install stress || true
+#                   - run: stress --vm 4 --timeout 30
+#     executors:
+#       default:
+#         docker:
+#         - image: <<parameters.docker_image>>
+#         parameters:
+#           docker_image:
+#             default: circleci/node:10
+#             description: the docker image to use for job
+#             type: string
+#     jobs:
+#       with_stats:
+#         executor: <<parameters.executor>>
+#         parameters:
+#           executor:
+#             default: default
+#             description: the executor to use for job
+#             type: executor
+#           job_steps:
+#             description: Map of steps to run while collecting stats
+#             type: steps
+#           stats_path:
+#             default: circleci-stats
+#             description: the relative or absolute directory for stats reports.
+#             type: string
+#         steps:
+#         - checkout
+#         - start_stats:
+#             stats_path: <<parameters.stats_path>>
+#         - steps: <<parameters.job_steps>>
+#         - expose_stats:
+#             stats_path: <<parameters.stats_path>>
+#     version: 2.1
+#     
+# workflows:
+#   stress_stats:
+#     jobs:
+#       - stats/with_stats:
+#           job_steps:
+#             - run: sudo apt-get update && sudo apt-get install -y stress
+#             - run: stress --vm 4 --timeout 30
