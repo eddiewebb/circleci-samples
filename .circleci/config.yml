@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  stats: eddiewebb/stats@volatile
+  stats: eddiewebb/stats@dev:local
 workflows:
   stress_stats:
     jobs:
@@ -8,8 +8,4 @@ workflows:
           job_steps:
             - run: sudo apt-get update && sudo apt-get install -y stress
             - run: stress --vm 4 --timeout 60
-            - run:
-                name: Credit Usage Estimate
-                command: |
-                  CREDITS=$(curl "https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}?filter=running&limit=1" 2>/dev/null | jq '.[0].picard.resource_class.class as $size |.[0].start_time as $start |[{"size":"small","credits":5},{"size":"medium","credits":10},{"size":"medium+","credits":15},{"size":"large","credits":20},{"size":"xlarge","credits":40}] |  .[] | select(.size == $size ) |  ( .credits * ((now - ($start | split(".")[0] +"Z" | fromdate)) / 60)) | floor')
-                  echo "This build has used ${CREDITS} credits."
+            - stats/credits_used
