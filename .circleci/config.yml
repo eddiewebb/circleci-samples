@@ -9,3 +9,4 @@ workflows:
             - run: sudo apt-get update && sudo apt-get install -y stress
             - run: stress --vm 4 --timeout 60
             - stats/credits_used
+            - cat /tmp/build-info.json
