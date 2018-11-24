@@ -11,5 +11,5 @@ workflows:
             - run:
                 name: Credit Usage Estimate
                 command: |
-                CREDITS=$(curl "https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}?filter=running&limit=1" 2>/dev/null | jq '.[0].picard.resource_class.class as $size |.[0].start_time as $start |[{"size":"small","credits":5},{"size":"medium","credits":10},{"size":"medium+","credits":15},{"size":"large","credits":20},{"size":"xlarge","credits":40}] |  .[] | select(.size == $size ) |  ( .credits * ((now - ($start | split(".")[0] +"Z" | fromdate)) / 60)) | floor')
-                echo "This build has used ${CREDITS} credits."
+                  CREDITS=$(curl "https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}?filter=running&limit=1" 2>/dev/null | jq '.[0].picard.resource_class.class as $size |.[0].start_time as $start |[{"size":"small","credits":5},{"size":"medium","credits":10},{"size":"medium+","credits":15},{"size":"large","credits":20},{"size":"xlarge","credits":40}] |  .[] | select(.size == $size ) |  ( .credits * ((now - ($start | split(".")[0] +"Z" | fromdate)) / 60)) | floor')
+                  echo "This build has used ${CREDITS} credits."
