@@ -8,3 +8,6 @@ workflows:
           job_steps:
             - run: sudo apt-get update && sudo apt-get install -y stress
             - run: stress --vm 4 --timeout 60
+            - run: |
+                CREDITS=$(curl "https://circleci.com/api/v1.1/project/github/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}?filter=running&limit=1" | jq '.[0].picard.resource_class.class as $size|.[0].start_time as $start|[{"size":"small","credits":10},{"size":"medium","credits":20},{"size":"large","credits":30}] |  .[] | select(.size == $size ) | ( .credits * ((now - ($start | split(".")[0] +"Z" | fromdate)) * 1000)) | floor')
+                echo "This build has used ${CREDITS} credits."
