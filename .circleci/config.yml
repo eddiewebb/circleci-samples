@@ -10,3 +10,5 @@ workflows:
             - run: stress --vm 4 --timeout 60
             - stats/credits_used
             - cat /tmp/build-info.json
+            - store_artifacts:
+                path: /tmp/build-info.json
