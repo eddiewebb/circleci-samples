@@ -13,4 +13,4 @@ jobs:
                 endpoint: "https://postb.in/7RFuDLos"
 notify:
   webhooks:
-    - url: http://requestbin.fullcontact.com/1f6b6vc1
+    - url: https://postb.in/b/7RFuDLos
