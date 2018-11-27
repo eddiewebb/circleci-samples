@@ -1,14 +1,12 @@
 version: 2.1
 orbs:
-  stats: eddiewebb/stats@dev:local
+  hello: circleci/hello-build@volatile
 workflows:
   stress_stats:
     jobs:
-      - stats/with_stats:
-          job_steps:
-            - run: sudo apt-get update && sudo apt-get install -y stress
-            - run: stress --vm 4 --timeout 60
-            - stats/credits_used
-            - run: cat /tmp/build-info.json
-            - store_artifacts:
-                path: /tmp/build-info.json
+      - hello/hello-build:
+          post-steps:
+            - run: echo "hi"
+notify:
+  webhooks:
+    - url: http://requestbin.fullcontact.com/1f6b6vc1
