@@ -1,10 +1,9 @@
 version: 2.1
 orbs:
   webhook: eddiewebb/webhook@dev:local
-workflows:
-  stress_stats:
-    jobs:
-      build:
+
+jobs:
+  build:
         docker:
           - image: circleci/node:10
         working_directory: ~/repo
