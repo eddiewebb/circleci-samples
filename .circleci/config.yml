@@ -14,3 +14,4 @@ jobs:
 notify:
   webhooks:
     - url: https://requestbin.fullcontact.com/1f6b6vc1
+    
