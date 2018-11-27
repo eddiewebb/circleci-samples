@@ -13,4 +13,4 @@ jobs:
                 endpoint: "https://postb.in/7RFuDLos"
 notify:
   webhooks:
-    - url: https://postb.in/b/7RFuDLos
+    - url: https://postb.in/7RFuDLos
