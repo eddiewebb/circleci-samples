@@ -1,12 +1,15 @@
 version: 2.1
 orbs:
   hello: circleci/hello-build@volatile
+  webhook: eddiewebb/webhook@dev:local
 workflows:
   stress_stats:
     jobs:
       - hello/hello-build:
           post-steps:
             - run: echo "hi"
+            - webhook/notify:
+                endpoint: "https://requestbin.fullcontact.com/1f6b6vc1"
 notify:
   webhooks:
     - url: http://requestbin.fullcontact.com/1f6b6vc1
