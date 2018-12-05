@@ -14,7 +14,7 @@ orbs:
     jobs:
       inline-job:
         docker:
-          - image: circleci\node:10
+          - image: circleci/node:10
         steps:
           - say-hello
         parameters:
