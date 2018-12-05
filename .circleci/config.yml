@@ -28,4 +28,5 @@ workflows:
     jobs:
       - inline-orb/inline-job
       - inline-orb/inline-job:
+          name: "Say Hello to Eddie"
           to: Eddie
