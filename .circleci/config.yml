@@ -23,7 +23,7 @@ workflows:
           filters:
             tags: {} # no action
       - hello/hello-build:
-          name: "With Expired Cron"
+          name: "With NOTATAG"
           filters:
             tags: 
               only: "notatag" 
@@ -32,7 +32,7 @@ workflows:
           filters:
             branches:
               only: nopeneverogintoexisst
-              
+
   a_default_workflow:
     jobs:
       - hello/hello-build:
