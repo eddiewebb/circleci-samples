@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   stats: eddiewebb/stats@dev:local
+  vidsy: vidsy/go@dev:task/generic-go-job
 workflows:
   stress_stats:
     jobs:
