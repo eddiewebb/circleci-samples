@@ -6,6 +6,34 @@ orbs:
 
 
 workflows:
-  a_workflow:
+  a_cron_workflow:
+    triggers:
+      - schedule:
+          cron: "30 6 25 12 01" # rare
+          filters:
+            branches: {} # no action
     jobs:
-      - hello/hello-build
+      - hello/hello-build:
+          name: "With Expired Cron"
+
+  a_never_workflow:
+    jobs:
+      - hello/hello-build:
+          name: "With Tag Filters"
+          filters:
+            tags: {} # no action
+      - hello/hello-build:
+          name: "With Expired Cron"
+          filters:
+            tags: 
+              only: "notatag" 
+      - hello/hello-build:
+          name: "With No Filters"
+          filters:
+            branches:
+              only: nopeneverogintoexisst
+              
+  a_default_workflow:
+    jobs:
+      - hello/hello-build:
+          name: "Every Webhook"
