@@ -16,7 +16,8 @@ orbs:
         docker:
           - image: circleci/node:10
         steps:
-          - say-hello
+          - say-hello:
+              to: <<parameters.to>>
         parameters:
           to:
             type: string
