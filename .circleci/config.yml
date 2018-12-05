@@ -1,39 +1,31 @@
 version: 2.1
 
 orbs:
-  hello: circleci/hello-build@0.0.7
+  inline-orb:
+    commands:
+      say-hello:
+        parameters:
+          to:
+            type: string
+            default: "world"
+        steps:
+          - run: Hello <<parameters.to>>
 
+    jobs:
+      inline-job:
+        docker:
+          - image: circleci\node:10
+        steps:
+          - say-hello
+        parameters:
+          to:
+            type: string
+            default: "world"
 
 
 workflows:
-  a_cron_workflow:
-    triggers:
-      - schedule:
-          cron: "30 6 25 12 01" # rare
-          filters:
-            branches: {} # no action
+  workflow_a:
     jobs:
-      - hello/hello-build:
-          name: "With Expired Cron"
-
-  a_never_workflow:
-    jobs:
-      - hello/hello-build:
-          name: "With Tag Filters"
-          filters:
-            tags: {} # no action
-      - hello/hello-build:
-          name: "With NOTATAG"
-          filters:
-            tags: 
-              only: "notatag" 
-      - hello/hello-build:
-          name: "With No Filters"
-          filters:
-            branches:
-              only: nopeneverogintoexisst
-
-  a_default_workflow:
-    jobs:
-      - hello/hello-build:
-          name: "Every Webhook"
+      - inline-orb/inline-job
+      - inline-orb/inline-job:
+          to: Eddie
