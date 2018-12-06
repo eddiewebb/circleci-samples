@@ -1,33 +1,10 @@
 version: 2.1
 
 orbs:
-  inline-orb:
-    commands:
-      say-hello:
-        parameters:
-          to:
-            type: string
-            default: "world"
-        steps:
-          - run: echo "Hello <<parameters.to>>"
-
-    jobs:
-      inline-job:
-        docker:
-          - image: circleci/node:10
-        steps:
-          - say-hello:
-              to: <<parameters.to>>
-        parameters:
-          to:
-            type: string
-            default: "world"
+  secrets: eddiewebb/secret_scan@volatile
 
 
 workflows:
   workflow_a:
     jobs:
-      - inline-orb/inline-job
-      - inline-orb/inline-job:
-          name: "Say Hello to Eddie"
-          to: Eddie
+      - secrets/scan
