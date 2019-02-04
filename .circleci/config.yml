@@ -1,55 +1,7 @@
-version: 2
-
+orbs:
+  hello-build: circleci/hello-build@0.0.8
+version: 2.1
 workflows:
-  version: 2
-  resource_class_jobs:
+  Hello Workflow:
     jobs:
-      - small
-      - medium
-      - medium+
-      - large
-      - xlarge
-      - 2xlarge
-      - 2xlarge+
-
-
-resource_job_defaults: &resource_job_defaults
-  docker:  [{image: 'circleci/ruby:2.4.1'}]
-  steps:
-    - run:
-        name: verify that job ran with the requested resource_class option
-        command: |
-          curl -k \
-          "$CIRCLE_HOSTNAME/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM?\
-          circle-token=$CIRCLE_TOKEN" | \
-          jq '.picard.resource_class.class' | grep $CIRCLE_JOB
-
-jobs:
-  # resource class jobs
-  small: # 1 vCPU, 2GB RAM
-    <<: *resource_job_defaults
-    resource_class: small
-
-  medium: # 2 vCPUs, 4GB RAM
-    <<: *resource_job_defaults
-    resource_class: medium
-
-  medium+: # 3 vCPUs, 6GB RAM
-    <<: *resource_job_defaults
-    resource_class: medium+
-
-  large: # 4 vCPUs, 8GB RAM
-    <<: *resource_job_defaults
-    resource_class: large
-
-  xlarge: # 8 vCPUs, 16GB RAM
-    <<: *resource_job_defaults
-    resource_class: xlarge
-
-  2xlarge: # 16 vCPUs, 32GB RAM ????????
-    <<: *resource_job_defaults
-    resource_class: 2xlarge
-
-  2xlarge+: # 20 vCPUs, 40GB RAM ????????
-    <<: *resource_job_defaults
-    resource_class: 2xlarge+
+    - hello-build/hello-build
