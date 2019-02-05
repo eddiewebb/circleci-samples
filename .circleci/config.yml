@@ -6,7 +6,7 @@ jobs:
     - image: bash:4.4.19
     steps:
     - run:
-        command: echo "Hello aaron"
+        command: echo "Hello eddie"
     - run:
         command: |-
           echo "TRIGGERER: ${CIRCLE_USERNAME}"
@@ -39,4 +39,4 @@ workflows:
 #   Hello Workflow:
 #     jobs:
 #     - hello-build/hello-build:
-#         to: aaron
+#         to: eddie

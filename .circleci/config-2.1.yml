@@ -8,4 +8,4 @@ workflows:
   Hello Workflow:
     jobs:
     - hello-build/hello-build:
-        to: aaron
+        to: eddie
