@@ -1,3 +1,4 @@
+# project uses 2.0 - see .git/hooks/pre-commit
 version: 2.1
 
 orbs:
