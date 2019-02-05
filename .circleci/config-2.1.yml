@@ -1,0 +1,8 @@
+orbs:
+  hello-build: circleci/hello-build@0.0.10
+version: 2.1
+workflows:
+  Hello Workflow:
+    jobs:
+    - hello-build/hello-build:
+      to: eddie
