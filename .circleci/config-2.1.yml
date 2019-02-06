@@ -34,8 +34,8 @@ jobs:
     - run: |
         mkdir -p tests/folderone/tests
         mkdir -p tests/foldertwo/tests
-        touch tests/folderone/tests/junit.xml
-        touch tests/foldertwo/tests/junit.xml
+        mv junit.xml tests/folderone/tests/junit.xml
+        mv junit2.xml tests/foldertwo/tests/junit.xml
        
     - store_test_results:
         path: tests
