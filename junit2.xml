@@ -1,0 +1,7 @@
+<testsuite tests="3">
+    <testcase classname="baz1" name="ASuccessfulTest"/>
+    <testcase classname="baz2" name="AnotherSuccessfulTest"/>
+    <testcase classname="baz3" name="AFailingTest">
+        <failure type="NotEnoughFoo"> details about failure </failure>
+    </testcase>
+</testsuite>
