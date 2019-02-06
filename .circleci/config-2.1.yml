@@ -38,7 +38,7 @@ jobs:
         touch tests/foldertwo/tests/junit.xml
         tree tests
     - store_test_results:
-      path: tests
+        path: tests
 
 
   approve-adhoc:
