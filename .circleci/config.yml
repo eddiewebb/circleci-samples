@@ -11,7 +11,6 @@ jobs:
           mkdir -p tests/foldertwo/tests
           touch tests/folderone/tests/junit.xml
           touch tests/foldertwo/tests/junit.xml
-          tree tests
     - store_test_results:
         path: tests
   sign-adhoc:
@@ -85,7 +84,7 @@ workflows:
 #         mkdir -p tests/foldertwo/tests
 #         touch tests/folderone/tests/junit.xml
 #         touch tests/foldertwo/tests/junit.xml
-#         tree tests
+#        
 #     - store_test_results:
 #         path: tests
 # 
