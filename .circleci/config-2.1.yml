@@ -28,30 +28,30 @@ workflows:
 jobs:
   test:
     docker:
-    - image: circleci\node:10
+    - image: circleci/node:10
     steps:
     - run: echo "hi"
 
   approve-adhoc:
     docker:
-    - image: circleci\node:10
+    - image: circleci/node:10
     steps:
     - run: echo "hi"
 
   approve-store:
     docker:
-    - image: circleci\node:10
+    - image: circleci/node:10
     steps:
     - run: echo "hi"
 
   sign-adhoc:
     docker:
-    - image: circleci\node:10
+    - image: circleci/node:10
     steps:
     - run: echo "hi"
 
   sign-store:
     docker:
-    - image: circleci\node:10
+    - image: circleci/node:10
     steps:
     - run: echo "hi"
