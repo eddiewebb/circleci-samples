@@ -31,13 +31,13 @@ jobs:
     - image: circleci/node:10
     steps:
     - run: |
-      if [[ `git log -1 --pretty=format:%s ${CIRCLE_SHA1}` == *"[appstore-sign]"* ]]; then
-        echo "Use appstore signing"
-        export FASTLANE_LANE="appstore"
-      else
-        echo "Use ad-hoc-sign"
-        export FASTLANE_LANE="adhoc"
-      fi
+        if [[ `git log -1 --pretty=format:%s ${CIRCLE_SHA1}` == *"[appstore-sign]"* ]]; then
+          echo "Use appstore signing"
+          export FASTLANE_LANE="appstore"
+        else
+          echo "Use ad-hoc-sign"
+          export FASTLANE_LANE="adhoc"
+        fi
 
   approve-adhoc:
     docker:
