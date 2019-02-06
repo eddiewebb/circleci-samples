@@ -30,6 +30,7 @@ jobs:
     docker:
     - image: circleci/node:10
     steps:
+    - checkout
     - run: |
         if [[ `git log -1 --pretty=format:%s ${CIRCLE_SHA1}` == *"[appstore-sign]"* ]]; then
           echo "Use appstore signing"
