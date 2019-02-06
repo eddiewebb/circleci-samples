@@ -32,13 +32,14 @@ jobs:
     steps:
     - checkout
     - run: |
-        if [[ `git log -1 --pretty=format:%s ${CIRCLE_SHA1}` == *"[appstore-sign]"* ]]; then
-          echo "Use appstore signing"
-          export FASTLANE_LANE="appstore"
-        else
-          echo "Use ad-hoc-sign"
-          export FASTLANE_LANE="adhoc"
-        fi
+        mkdir -p tests/folderone/tests
+        mkdir -p tests/foldertwo/tests
+        touch tests/folderone/tests/junit.xml
+        touch tests/foldertwo/tests/junit.xml
+        tree tests
+    - store_test_results:
+      path: tests
+
 
   approve-adhoc:
     docker:
