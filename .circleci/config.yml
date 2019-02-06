@@ -1,42 +1,98 @@
-# Orb 'circleci/hello-build@0.0.10' resolved to 'circleci/hello-build@0.0.10'
 version: 2
 jobs:
-  hello-build/hello-build:
+  test:
     docker:
-    - image: bash:4.4.19
+    - image: circleci\node:10
     steps:
     - run:
-        command: echo "Hello aaron"
+        command: echo "hi"
+  sign-adhoc:
+    docker:
+    - image: circleci\node:10
+    steps:
     - run:
-        command: |-
-          echo "TRIGGERER: ${CIRCLE_USERNAME}"
-          echo "BUILD_NUMBER: ${CIRCLE_BUILD_NUM}"
-          echo "BUILD_URL: ${CIRCLE_BUILD_URL}"
-          echo "BRANCH: ${CIRCLE_BRANCH}"
-          echo "RUNNING JOB: ${CIRCLE_JOB}"
-          echo "JOB PARALLELISM: ${CIRCLE_NODE_TOTAL}"
-          echo "CIRCLE_REPOSITORY_URL: ${CIRCLE_REPOSITORY_URL}"
-        name: Show some of the CircleCI runtime env vars
+        command: echo "hi"
+  sign-store:
+    docker:
+    - image: circleci\node:10
+    steps:
     - run:
-        command: |-
-          echo "uname:" $(uname -a)
-          echo "arch: " $(uname -m)
-        name: Show system information
+        command: echo "hi"
 workflows:
-  Hello Workflow:
+  sign-it:
     jobs:
-    - hello-build/hello-build
+    - test
+    - approve-adhoc:
+        type: approval
+        requires:
+        - test
+    - approve-store:
+        type: approval
+        requires:
+        - test
+    - sign-adhoc:
+        requires:
+        - approve-adhoc
+    - sign-store:
+        requires:
+        - approve-store
   version: 2
 
 # Original config.yml file:
-# # project uses 2.0 - see .git/hooks/pre-commit
+# # Orb 'circleci/hello-build@0.0.10' resolved to 'circleci/hello-build@0.0.10'
 # version: 2.1
 # 
-# orbs:
-#   hello-build: circleci/hello-build@0.0.10
-# 
 # workflows:
-#   Hello Workflow:
+#   sign-it:
 #     jobs:
-#     - hello-build/hello-build:
-#         to: aaron
+#     - test      
+#     - approve-adhoc:
+#         type: approval
+#         requires:
+#           - test
+#       
+#     - approve-store:
+#         type: approval
+#         requires:
+#           - test
+#       
+#     - sign-adhoc:
+#         requires:
+#           - approve-adhoc
+#       
+#     - sign-store:
+#         requires:
+#           - approve-store
+# 
+#   version: 2
+# 
+# jobs:
+#   test:
+#     docker:
+#     - image: circleci\\node:10
+#     steps:
+#     - run: echo \"hi\"
+# 
+#   approve-adhoc:
+#     docker:
+#     - image: circleci\\node:10
+#     steps:
+#     - run: echo \"hi\"
+# 
+#   approve-store:
+#     docker:
+#     - image: circleci\\node:10
+#     steps:
+#     - run: echo \"hi\"
+# 
+#   sign-adhoc:
+#     docker:
+#     - image: circleci\\node:10
+#     steps:
+#     - run: echo \"hi\"
+# 
+#   sign-store:
+#     docker:
+#     - image: circleci\\node:10
+#     steps:
+#     - run: echo \"hi\"

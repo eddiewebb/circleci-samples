@@ -1,11 +1,57 @@
-# project uses 2.0 - see .git/hooks/pre-commit
+# Orb 'circleci/hello-build@0.0.10' resolved to 'circleci/hello-build@0.0.10'
 version: 2.1
 
-orbs:
-  hello-build: circleci/hello-build@0.0.10
-
 workflows:
-  Hello Workflow:
+  sign-it:
     jobs:
-    - hello-build/hello-build:
-        to: aaron
+    - test      
+    - approve-adhoc:
+        type: approval
+        requires:
+          - test
+      
+    - approve-store:
+        type: approval
+        requires:
+          - test
+      
+    - sign-adhoc:
+        requires:
+          - approve-adhoc
+      
+    - sign-store:
+        requires:
+          - approve-store
+
+  version: 2
+
+jobs:
+  test:
+    docker:
+    - image: circleci\node:10
+    steps:
+    - run: echo "hi"
+
+  approve-adhoc:
+    docker:
+    - image: circleci\node:10
+    steps:
+    - run: echo "hi"
+
+  approve-store:
+    docker:
+    - image: circleci\node:10
+    steps:
+    - run: echo "hi"
+
+  sign-adhoc:
+    docker:
+    - image: circleci\node:10
+    steps:
+    - run: echo "hi"
+
+  sign-store:
+    docker:
+    - image: circleci\node:10
+    steps:
+    - run: echo "hi"
