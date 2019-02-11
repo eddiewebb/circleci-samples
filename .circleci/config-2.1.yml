@@ -7,17 +7,6 @@ jobs:
     steps:
     - checkout
     - run: ls
-    - run:
-        name: use emojies
-        command: |
-          if [ -f ignoredFile ]; then
-            echo "Found ignored file, fialing builds"
-            exit 1
-          fi
-          if [ ! -f "file with spaces" ]; then
-            echo "file with spaces not found, fialing builds"
-            exit 1
-          fi
 workflows:
   version: 2
   workflow:
