@@ -3,7 +3,7 @@ jobs:
   build:
     macos:
       xcode: "9.0"
-      resource_class: "large"
+      resource_class: large
     steps:
     - checkout
     - run: |
