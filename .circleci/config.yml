@@ -1,9 +1,9 @@
 version: 2.0
 jobs:
   build:
+    resource_class: large
     macos:
       xcode: '9.0'
-      resource_class: large
     steps:
     - checkout
     - run: |
