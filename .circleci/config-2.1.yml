@@ -8,7 +8,7 @@ jobs:
     - checkout
     - run: ls
     - run:
-        name: use emojies 🔧
+        name: use emojies
         command: |
           if [ -f ignoredFile ]; then
             echo "Found ignored file, fialing builds"
