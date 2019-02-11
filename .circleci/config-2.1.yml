@@ -1,8 +1,9 @@
 version: 2.0
 jobs:
   build:
-    docker:
-    - image: circleci/node:10
+    macos:
+      xcode: "9.0"
+      resource_class: "large"
     steps:
     - checkout
     - run: ls
