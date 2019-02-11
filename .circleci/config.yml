@@ -6,7 +6,13 @@ jobs:
       resource_class: large
     steps:
     - checkout
-    - run: ls
+    - run: |
+        ls
+        vm_stat
+        top -l 1 | grep PhysMem:
+        system_profiler SPHardwareDataType | grep "  Memory:"
+        system_profiler SPHardwareDataType | grep Cores:
+        system_profiler SPHardwareDataType | grep Processors:
 workflows:
   version: 2
   workflow:
