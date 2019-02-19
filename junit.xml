@@ -4,4 +4,5 @@
     <testcase classname="foo3" name="AFailingTest">
         <failure type="NotEnoughFoo"> details about failure </failure>
     </testcase>
+    
 </testsuite>
