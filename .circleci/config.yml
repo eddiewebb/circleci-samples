@@ -18,7 +18,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: exit 1
+      - run: exit 0
       - jira/notify
 
   ensure-fail-first: #this job just ensutes that build-job job get a higher build number
