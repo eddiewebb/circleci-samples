@@ -9,7 +9,7 @@ workflows:
           - ensure-fail-first
 
 orbs:
-  jira: circleci/jira@dev:token-only-ae73b7cf2d1772ea8179ae476a9d924cf443660a
+  jira: eddiewebb/burps@dev:eddie-level
 
 jobs:
   fail-fast:
