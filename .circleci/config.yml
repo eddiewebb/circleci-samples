@@ -39,4 +39,3 @@ jobs:
       - checkout
       - run: echo "hi Jira"
       - jira/notify
-
