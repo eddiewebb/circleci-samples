@@ -37,5 +37,5 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo "hi JIra"
+      - run: echo "hi Jira"
       - jira/notify
