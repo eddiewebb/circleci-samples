@@ -23,7 +23,7 @@ workflows:
           environment-type: production
 
 orbs:
-  jira: eddiewebb/burps@dev:build-zero
+  jira: eddiewebb/burps@dev:build-num
 
 jobs:
   fail-fast:
@@ -32,7 +32,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: exit 0
+      - run: exit 1
       - jira/notify
 
   ensure-fail-first: #this job just ensutes that build-job job get a higher build number than fail-fast
