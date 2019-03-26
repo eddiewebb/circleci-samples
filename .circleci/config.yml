@@ -23,7 +23,7 @@ workflows:
           environment-type: production
 
 orbs:
-  jira: eddiewebb/burps@dev:build-bo†h
+  jira: eddiewebb/burps@dev:build-both
 
 jobs:
   fail-fast:
