@@ -2,15 +2,15 @@ version: 2.1
 workflows:
   build-deploy:
     jobs:
-      - fail-fast
-      - ensure-fail-first
-      - build-job:
+      - component-A
+      - component-B
+      - integration:
           requires:
-          - ensure-fail-first
+          - component-B
       - deploy:
           name: Dev East
           requires: 
-          - build-job
+          - integration
       - deploy:
           name: Test East
           requires:
@@ -23,10 +23,10 @@ workflows:
           environment-type: production
 
 orbs:
-  jira: eddiewebb/burps@dev:build-both
+  jira: circleci/jira@dev:demo
 
 jobs:
-  fail-fast:
+  component-A:
     docker:
       - image: circleci/node:10
     working_directory: ~/repo
@@ -35,7 +35,7 @@ jobs:
       - run: exit 1
       - jira/notify
 
-  ensure-fail-first: #this job just ensutes that build-job job get a higher build number than fail-fast
+  component-B: #this job just ensutes that integration job get a higher component-B number than lint
     docker:
       - image: circleci/node:10
     working_directory: ~/repo
@@ -44,7 +44,7 @@ jobs:
       - run: sleep 2
       - jira/notify
 
-  build-job:
+  integration:
     docker:
       - image: circleci/node:10
     working_directory: ~/repo
