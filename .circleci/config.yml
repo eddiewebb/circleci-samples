@@ -1,4 +1,9 @@
 version: 2.1
+
+orbs:
+  jira: circleci/jira@dev:demo
+
+
 workflows:
   build-deploy:
     jobs:
@@ -22,9 +27,6 @@ workflows:
           - Test East
           environment-type: production
 
-orbs:
-  jira: circleci/jira@dev:demo
-
 jobs:
   component-A:
     docker:
@@ -32,7 +34,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: exit 1
+      - run: exit 0
       - jira/notify
 
   component-B: #this job just ensutes that integration job get a higher component-B number than lint
