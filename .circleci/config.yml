@@ -22,10 +22,15 @@ workflows:
           requires:
           - Dev East
           environment-type: testing
+      - hold:
+          name: Verify
+          requires:
+          - Test East
+          type: approval
       - deploy:
           name: Prod East
           requires:
-          - Test East
+          - Verify
           environment-type: production
 
 jobs:
