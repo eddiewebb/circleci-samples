@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:demo
+  jira: circleci/jira@dev:RC-1
 
 
 workflows:
@@ -11,6 +11,7 @@ workflows:
       - component-B
       - integration:
           requires:
+          - component-A
           - component-B
       - deploy:
           name: Dev East
