@@ -1,81 +1,13 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:RC-1
+  jira: circleci/jira@1.0.0
+  hello-build: circleci/hello-build@0.0.13
 
 
 workflows:
   build-deploy:
     jobs:
-      - component-A
-      - component-B
-      - integration:
-          requires:
-          - component-A
-          - component-B
-      - deploy:
-          name: Dev East
-          requires: 
-          - integration
+      - hello-build/hello-build:
           post-steps:
-          - jira/notify:
-              job_type: deployment
-              environment_type: development
-      - deploy:
-          name: Test East
-          requires:
-          - Dev East
-          post-steps:
-          - jira/notify:
-              job_type: deployment
-              environment_type: testing
-      - hold:
-          name: Verify
-          requires:
-          - Test East
-          type: approval
-      - deploy:
-          name: Prod East
-          requires:
-          - Verify
-          post-steps:
-          - jira/notify:
-              job_type: deployment
-              environment_type: production
-
-jobs:
-  component-A:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: exit 0
-      - jira/notify
-
-  component-B: #this job just ensutes that integration job get a higher component-B number than lint
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: sleep 2
-      - jira/notify
-
-  integration:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo "hi Jira"
-      - jira/notify
-
-  deploy:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo "hi Jira"
-
+          - jira/notify
