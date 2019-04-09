@@ -1,10 +1,12 @@
-version: 2.1
+version: 2
 
-orbs:
-  secrets: eddiewebb/secret_scan@volatile
-
-
-workflows:
-  workflow_a:
-    jobs:
-      - secrets/scan
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - setup_remote_docker
+      - run: |
+          echo ${CIRCLE_BRANCH}
+          TRAVIS_BRANCH=${CIRCLE_BRANCH}
+          docker run -e "TRAVIS_BRANCH=${CIRCLE_BRANCH}" eddiewebb/echo:latest
