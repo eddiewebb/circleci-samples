@@ -7,6 +7,6 @@ jobs:
     steps:
       - setup_remote_docker
       - run: |
-          echo ${CIRCLE_BRANCH}
-          TRAVIS_BRANCH=${CIRCLE_BRANCH}
-          docker run -e "TRAVIS_BRANCH=${CIRCLE_BRANCH}" eddiewebb/echo:latest
+          echo ${KEY} > key.pem
+          head -2 key.pem
+          ssh-keygen -y -e -f key.pem
