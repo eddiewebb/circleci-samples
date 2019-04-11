@@ -8,5 +8,5 @@ jobs:
       - setup_remote_docker
       - run: |
           echo ${KEY} > key.pem
-          head -2 key.pem
+          chmod 0600 key.pem
           ssh-keygen -y -e -f key.pem
