@@ -5,8 +5,7 @@ jobs:
     docker:
       - image: circleci/node:10
     steps:
-      - setup_remote_docker
       - run: |
-          echo ${KEY} > key.pem
+          echo ${KEY} | base64 --decode > key.pem
           chmod 0600 key.pem
           ssh-keygen -y -e -f key.pem
