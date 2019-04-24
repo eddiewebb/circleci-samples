@@ -1,7 +1,6 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@1.0.0
   hello-build: circleci/hello-build@0.0.13
 
 
@@ -10,4 +9,10 @@ workflows:
     jobs:
       - hello-build/hello-build:
           post-steps:
-          - jira/notify
+          - run:
+              name: sleep
+              command: sleep 10
+          - run:
+              name: cleanup
+              command: echo "I ran"
+              when: always
