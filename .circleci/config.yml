@@ -11,7 +11,7 @@ workflows:
           post-steps:
           - run:
               name: sleep
-              command: sleep 10
+              command: sleep 100
           - run:
               name: cleanup
               command: echo "I ran"
