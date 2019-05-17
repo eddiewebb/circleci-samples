@@ -1,88 +1,19 @@
 version: 2.1
 
 orbs:
-  tunnel: eddiewebb/dmz@0.0.6
-  sauce: saucelabs/sauce-connect@1.0.1
-  maven: circleci/maven@0.0.4
+  hello: circleci/hello-build@0.0.13
 
 workflows:
   version: 2
   build_deploy:
     jobs:
-      - vpn_example
-      - unit-test
-      - maven/test:
-          name: "Static Analysis"
-          command: 'clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar 
-                     -Dsonar.host.url=https://sonarcloud.io 
-                     -Dsonar.organization=circleci-demo 
-                     -Dsonar.login=${SONAR_KEY} 
-                     -Dsonar.branch.name=${CIRCLE_BRANCH}'
+      - my_job
 
-      # Simple example
-      - sauce/with_proxy:
-          name: "Chrome Tests"
-          requires:
-            - unit-test
-          steps:
-            - run: echo "Run tests!"
-
-      # Customized Example
-      - sauce/with_proxy:
-          name: "IE Tests with Internal Access"
-          requires:
-            - unit-test
-          tunnel_identifier: ie
-          pre-steps:
-            # Open local port to dev object id service
-            - tunnel/open_tunnel:
-                bastion_host: jump-host.domain
-                bastion_public_key: path/to/bastion.pub
-                bastion_user: ubuntu
-                local_port: '9001'
-                target_host: dev-target-host.domain
-                target_port: '443'
-          steps:
-            # Orbs can be composed and referenced
-            - maven/with_cache:
-                steps:
-                  - run: ./mvnw verify -B -Dsauce.tunnel="ie" || echo ""
 jobs:
-  vpn_example:
-    machine: true
-    steps:
-    - run:
-        name: Pull OpenConnect Docker Image
-        command: |
-          docker pull $VPN_CONTAINER_REGISTRY_URL
-    - run:
-        name: Connect to VPN
-        command: |
-          CONTAINER=$(docker run \
-            --privileged \
-            -dt \
-            --name vpn \
-            --net host \
-            --add-host "$VPN_HOST:$VPN_SERVER" \
-            -e VPN_SERVER=$VPN_HOST \
-            -e VPN_USER=$VPN_USER \
-            -e VPN_PASSWORD=$VPN_PASSWORD \
-            $VPN_CONTAINER_REGISTRY_URL)
-          ping $VPN_GATEWAY_IP -c 5
-    # - run: ....
+  my_job:
+    machine:
+      image: circleci/classic:latest
+      docker_layer_caching: true
 
-  unit-test:
-    macos:
-      xcode: "10.2.1"
-    # parallelism: 2
     steps:
-      - checkout
-      - run:
-          name: Build with xcode
-          command: |
-            echo "Run tests here"
-            # fastlane scan, etc
-      - store_test_results:
-          path: output/scan
-      - store_artifacts:
-          path: output
+      - hello/circleci-env-highlights
