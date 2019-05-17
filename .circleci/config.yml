@@ -17,3 +17,7 @@ jobs:
 
     steps:
       - hello/circleci-env-highlights
+      - run: |
+          sudo ls -la /var/lib/docker
+          sudo ls -la /var/lib/docker/volumes
+          sudo ls -la /var/lib/docker/image
