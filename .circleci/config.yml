@@ -21,3 +21,11 @@ jobs:
           sudo ls -la /var/lib/docker
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
+      - run: |
+          sudo mkdir -p /var/lib/docker/mygit
+          echo "im here" >> /var/lib/docker/mygit/index
+      - run: |
+          sudo ls -la /var/lib/docker
+          sudo ls -la /var/lib/docker/volumes
+          sudo ls -la /var/lib/docker/image
+          cat /var/lib/docker/mygit/index
