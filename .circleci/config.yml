@@ -29,3 +29,4 @@ jobs:
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
           cat /var/lib/docker/mygit/index
+          
