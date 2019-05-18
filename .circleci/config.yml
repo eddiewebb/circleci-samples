@@ -21,7 +21,7 @@ jobs:
           sudo ls -la /var/lib/docker
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
-          sudo ls -la */index
+          sudo ls -la */index || true
       - run: |
           sudo mkdir -p /var/lib/docker/mygit
           echo "im here" | sudo tee -a /var/lib/docker/mygit/index
