@@ -32,7 +32,8 @@ jobs:
           sudo ls -la /var/lib/docker
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
-          sudo ls -la /var/lib/docker/*/index
+          sudo cd /var/lib/docker
+          sudo ls -la */index
           sudo cat -n /var/lib/docker/*/index
 
           
