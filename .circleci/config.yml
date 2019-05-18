@@ -21,13 +21,19 @@ jobs:
           sudo ls -la /var/lib/docker
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
+          sudo ls -la */index
+          sudo cat -n /var/lib/docker/*/index
       - run: |
           sudo mkdir -p /var/lib/docker/mygit
           echo "im here" | sudo tee -a /var/lib/docker/mygit/index
+          echo "im here" | sudo tee -a /var/lib/docker/containers/index
+          echo "im here" | sudo tee -a /var/lib/docker/builder/index
+          echo "im here" | sudo tee -a /var/lib/docker/tmp/index
       - run: |
           sudo ls -la /var/lib/docker
           sudo ls -la /var/lib/docker/volumes
           sudo ls -la /var/lib/docker/image
-          cat /var/lib/docker/mygit/index
-          
+          sudo ls -la */index
+          sudo cat -n /var/lib/docker/*/index
+
           
