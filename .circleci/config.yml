@@ -1,47 +1,10 @@
 version: 2.1
 
-jobs:
-  build:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - add_ssh_keys
-      - run:
-          name: Keyscan Github (HACK)
-          command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-      - run: |
-          #!/bin/bash
+orbs:
+  common: eddiewebb/common_tasks@dev:eddie
 
-          # required parameters
-          TASK_NAME=demo-task
-
-          # parameters to override
-          ORG_NAME=${CIRCLE_PROJECT_USERNAME}
-          REPO_NAME=cci-shared-tasks
-          RUN_NAME=run.bash
-          #SSH_FINGERPRINT=
-
-
-
-
-
-          # replaces current repo name with task repo name
-          TASK_REPO_URL=${CIRCLE_REPOSITORY_URL/$CIRCLE_PROJECT_REPONAME/$REPO_NAME}
-          # replace orgname with parameter (most cases will be the same)
-          TASK_REPO_URL=${TASK_REPO_URL/$CIRCLE_PROJECT_USERNAME/$ORG_NAME}
-
-          echo $TASK_REPO_URL
-
-          mkdir /tmp/cci-shared-tasks
-          cd /tmp/cci-shared-tasks
-          git init
-          git remote add origin ${TASK_REPO_URL}
-          git fetch origin
-          git checkout origin/master -- tasks/$TASK_NAME
-          ls
-
-          cd -
-          bash /tmp/cci-shared-tasks/tasks/$TASK_NAME/run.bash
-
-
-
+workflows:
+  basic:
+    jobs:
+      - common/common_task:
+          task-name: demo-task
