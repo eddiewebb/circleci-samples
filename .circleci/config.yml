@@ -1,18 +1,44 @@
 version: 2.1
 
-orbs:
-  hello-build: circleci/hello-build@0.0.13
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - run: |
+          #!/bin/bash
+
+          # required parameters
+          TASK_NAME=demo-task
+
+          # parameters to override
+          ORG_NAME=${CIRCLE_PROJECT_USERNAME}
+          REPO_NAME=cci-shared-tasks
+          RUN_NAME=run.bash
+          #SSH_FINGERPRINT=
 
 
-workflows:
-  build-deploy:
-    jobs:
-      - hello-build/hello-build:
-          post-steps:
-          - run:
-              name: sleep
-              command: sleep 100
-          - run:
-              name: cleanup
-              command: echo "I ran"
-              when: always
+
+
+
+          # replaces current repo name with task repo name
+          TASK_REPO_URL=${CIRCLE_REPOSITORY_URL/$CIRCLE_PROJECT_REPONAME/$REPO_NAME}
+          # replace orgname with parameter (most cases will be the same)
+          TASK_REPO_URL=${TASK_REPO_URL/$CIRCLE_PROJECT_USERNAME/$ORG_NAME}
+
+          echo $TASK_REPO_URL
+
+          mkdir /tmp/cci-shared-tasks
+          cd /tmp/cci-shared-tasks
+          git init
+          git remote add origin ${TASK_REPO_URL}
+          git fetch origin
+          git checkout origin/master -- tasks/$TASK_NAME
+          ls
+
+          cd -
+          bash /tmp/cci-shared-tasks/tasks/$TASK_NAME/run.bash
+
+
+          
+          
