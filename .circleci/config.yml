@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: circleci/node:10
     steps:
+      - add_ssh_keys
       - run: |
           #!/bin/bash
 
@@ -40,5 +41,4 @@ jobs:
           bash /tmp/cci-shared-tasks/tasks/$TASK_NAME/run.bash
 
 
-          
-          
+
