@@ -8,5 +8,8 @@ workflows:
     jobs:
       - common/common_task:
           task-name: demo-task
+      - common/common_task:
+          task-name: demo-task-with-parameters
+          pre-steps:
+            - run: echo "export SOME_VAR=value >> $BASH_ENV"
 
-        
