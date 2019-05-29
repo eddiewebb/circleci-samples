@@ -1,15 +1,68 @@
 version: 2.1
 
-orbs:
-  common: eddiewebb/common_tasks@dev:eddie
-
 workflows:
   basic:
     jobs:
-      - common/common_task:
-          task-name: demo-task
-      - common/common_task:
-          task-name: demo-task-with-parameters
-          pre-steps:
-            - run: echo "export SOME_VAR=value" >> $BASH_ENV
+      - isolated
+      - merged:
+          requires: [isolated]
+          filters:
+            branches:
+              ignore: [master]
+
+  tag_and_release:
+    jobs:
+      - release:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
+jobs:
+  isolated:
+    docker:
+      - image: circleci/python:2-jessie
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - save_cache:
+          key: source-cache-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - ".git"
+      - run: echo "passed"
+
+  merged:
+    docker:
+      - image: circleci/python:2-jessie
+    working_directory: ~/repo
+    steps:
+      - add_ssh_keys
+      - run:
+          name: Keyscan Github (HACK)
+          command: ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+      - run:
+          name: Merge latest from master
+          command: |
+            if [ "x" != "x${CIRCLE_PULL_REQUEST}" ];then
+              echo "Build is part of a PR, try merged build"
+              # in case of forked repos, this is not actually upstream..
+              echo "Clone: git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git"
+              git clone git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
+              git merge origin/${CIRCLE_BRANCH}
+              if [ $? -ne 0 ];then
+                echo "Merge fail, conflicts. Please merge latest form master manually"
+                exit 1
+              fi
+              git status
+            else
+              echo "Not a PR, skipping merge"
+            fi
+
+  release:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - run: echo "Running for new tag ${CIRCLE_TAG}"
 
