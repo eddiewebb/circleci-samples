@@ -9,6 +9,15 @@ workflows:
             branches:
               ignore: [master]
 
+  tag_and_release:
+    jobs:
+      - release:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
+
 version: 2
 jobs:
   isolated:
@@ -37,7 +46,6 @@ jobs:
           command: |
             if [ "x" != "x${CIRCLE_PULL_REQUEST}" ];then
               echo "Build is part of a PR, try merged build"
-              set | grep CIRCLE
               # in case of forked repos, this is not actually upstream..
               echo "Clone: git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git"
               git clone git@github.com:${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git .
@@ -50,3 +58,11 @@ jobs:
             else
               echo "Not a PR, skipping merge"
             fi
+
+  release:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - run: echo "Running for new tag ${CIRCLE_TAG}"
+
