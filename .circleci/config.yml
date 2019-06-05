@@ -8,6 +8,8 @@ workflows:
     jobs:
       - common/common_task:
           task-name: demo-task
+          pre-steps: 
+            - run: sleep 60
       - common/common_task:
           task-name: demo-task-with-parameters
           pre-steps:
