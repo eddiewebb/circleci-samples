@@ -9,6 +9,5 @@ jobs:
   build:
     docker:
     - image: circleci/node:10
-    parallelism: 4
     steps:
     - run: echo "<<pipeline.parameters.pass_by_build>>"
