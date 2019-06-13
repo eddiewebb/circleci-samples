@@ -1,8 +1,9 @@
-version: 2
+version: 2.1
 
 parameters:
   pass_by_build:
     default: "default"
+    type: string
 
 jobs:
   build:
@@ -10,4 +11,4 @@ jobs:
     - image: circleci/node:10
     parallelism: 4
     steps:
-    - run: echo "<<parameters.pass_by_build>>"
+    - run: echo "<<pipeline.parameters.pass_by_build>>"
