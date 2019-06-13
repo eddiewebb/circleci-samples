@@ -1,9 +1,13 @@
 version: 2
+
+parameters:
+  pass_by_build:
+    default: "default"
+
 jobs:
   build:
     docker:
     - image: circleci/node:10
     parallelism: 4
     steps:
-    - run: sleep 10
-    - run: echo "done"
+    - run: echo "<<parameters.pass_by_build>>"
