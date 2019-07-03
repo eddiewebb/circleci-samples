@@ -4,8 +4,8 @@ orbs:
   common: eddiewebb/common_tasks@0.1.0
 
 parameters:
-  pass_by_build:
-    default: "default"
+  task_name:
+    default: "demo-task"
     type: string
 
 jobs:
@@ -13,6 +13,6 @@ jobs:
     docker:
     - image: circleci/node:10
     steps:
-    - run: echo "<<pipeline.parameters.pass_by_build>>"
+    - run: echo "<<pipeline.parameters.task_name>>"
     - common/run_shared_task:
-          task-name: demo-task
+          task-name: <<pipeline.parameters.task_name>>
