@@ -68,7 +68,6 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo "hi Jira"
       - jira/notify
 
   deploy:
