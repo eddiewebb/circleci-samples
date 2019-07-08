@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:RC-1
+  jira: circleci/jira@dev:kylet
 
 
 workflows:
