@@ -3,16 +3,37 @@ version: 2.1
 orbs:
   common: eddiewebb/common_tasks@0.1.0
 
+
+# parameter acts as the conditional gate deciding what workflow to run
 parameters:
-  task_name:
-    default: "demo-task"
-    type: string
+  run_deployment:
+    default: false
+    type: boolean
+  # harvest deployable artifacts from the workflow provided  
+  source_workflow:
+    default: false
+    type: boolean
+
+workflows:
+  build_and_test:
+    unless: << pipeline.parameters.run_deployment >>
+    jobs:
+      - build
+  run_deployment:
+    when: << pipeline.parameters.run_deployment >>
+    jobs:
+      - deploy
 
 jobs:
   build:
     docker:
     - image: circleci/node:10
     steps:
-    - run: echo "<<pipeline.parameters.task_name>>"
-    - common/run_shared_task:
-          task-name: <<pipeline.parameters.task_name>>
+    - run: echo "building"
+
+
+  deploy:
+    docker:
+    - image: circleci/node:10
+    steps:
+    - run: echo "Deploying"
