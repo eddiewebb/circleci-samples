@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Build and unit test
           command: |
-            mvn test -B \
+            ./mvnw test -B \
               -Dbuild.number=${CIRCLE_BUILD_NUM} \
               -Dcommit.hash=${CIRCLE_SHA1} \
               -Dcircle.workflow.guid=${CIRCLE_WORKFLOW_ID} \
