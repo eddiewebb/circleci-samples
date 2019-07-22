@@ -1,3 +1,9 @@
+
+version: 2.1
+
+orbs:
+  eks: circleci/aws-eks@0.1.0
+
 workflows:
   version: 2
   build-deploy:
@@ -6,12 +12,23 @@ workflows:
       - publish-docker:
           requires:
             - unit-test
+      - eks/create-cluster:
+          cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
 
-version: 2
+      - test-cluster:
+          cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+          requires:
+            - eks/create-cluster
+
+      - eks/delete-cluster:
+          cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+          requires:
+            - test-cluster
+
 jobs:
   unit-test:
     docker:
-      - image: circleci/openjdk:8-jdk
+      - image: circleci/openjdk:8
     working_directory: ~/repo
     steps:
       - checkout
@@ -23,7 +40,7 @@ jobs:
       - run:
           name: Build and unit test
           command: |
-            ./mvnw test -B \
+            mvn test -B \
               -Dbuild.number=${CIRCLE_BUILD_NUM} \
               -Dcommit.hash=${CIRCLE_SHA1} \
               -Dcircle.workflow.guid=${CIRCLE_WORKFLOW_ID} \
