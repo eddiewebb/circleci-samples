@@ -21,7 +21,6 @@ workflows:
 
       - test-cluster:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
-          aws-region: <<pipeline.parameters.aws-region>>
           requires:
             - eks/create-cluster
             - publish-docker
@@ -53,6 +52,7 @@ jobs:
     steps:
       - kubernetes/install
       - eks/update-kubeconfig-with-authenticator:
+          aws-region: <<pipeline.parameters.aws-region>>
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
       - run:
           command: |
