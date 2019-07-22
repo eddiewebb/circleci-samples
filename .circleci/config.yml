@@ -2,7 +2,9 @@
 version: 2.1
 
 parameters:
-  aws-region: us-east-2
+  aws-region: 
+    type: string
+    default: "us-east-2"
 
 orbs:
   eks: circleci/aws-eks@0.1.0
