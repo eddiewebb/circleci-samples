@@ -3,6 +3,7 @@ version: 2.1
 
 orbs:
   eks: circleci/aws-eks@0.1.0
+  kubernetes: circleci/kubernetes@0.3.0
 
 workflows:
   version: 2
@@ -87,7 +88,7 @@ jobs:
         type: string
     steps:
       - kubernetes/install
-      - aws-eks/update-kubeconfig-with-authenticator:
+      - eks/update-kubeconfig-with-authenticator:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
       - run:
           command: |
