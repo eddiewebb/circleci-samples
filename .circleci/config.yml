@@ -6,9 +6,6 @@ workflows:
       - publish-docker:
           requires:
             - unit-test
-          filters:
-            branches:
-              only: master
 
 version: 2
 jobs:
