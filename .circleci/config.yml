@@ -7,7 +7,7 @@ parameters:
     default: "us-east-2"
 
 orbs:
-  eks: circleci/aws-eks@0.1.0
+  eks: circleci/aws-eks@dev:eddie
   kubernetes: circleci/kubernetes@0.3.0
 
 workflows:
