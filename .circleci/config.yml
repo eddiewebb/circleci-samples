@@ -21,12 +21,14 @@ workflows:
 
       - test-cluster:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+          aws-region: <<pipeline.parameters.aws-region>>
           requires:
             - eks/create-cluster
             - publish-docker
 
       - eks/delete-cluster:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+          aws-region: <<pipeline.parameters.aws-region>>
           requires:
             - test-cluster
 
