@@ -1,6 +1,9 @@
 
 version: 2.1
 
+parameters:
+  aws-region: us-east-2
+
 orbs:
   eks: circleci/aws-eks@0.1.0
   kubernetes: circleci/kubernetes@0.3.0
@@ -12,6 +15,7 @@ workflows:
       - publish-docker
       - eks/create-cluster:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+          aws-region: <<pipeline.parameters.aws-region>>
 
       - test-cluster:
           cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
