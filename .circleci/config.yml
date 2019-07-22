@@ -78,3 +78,18 @@ jobs:
               -Dbuild.user=${CIRCLE_PROJECT_USERNAME} \
               -Dbuild.repo=${CIRCLE_PROJECT_REPONAME} 
       
+  test-cluster:
+    executor: eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
+    steps:
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: dynamic-cluster-${CIRCLE_WORKFLOW_ID}
+      - run:
+          command: |
+            kubectl get services
+          name: Test cluster
