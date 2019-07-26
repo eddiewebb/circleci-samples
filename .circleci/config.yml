@@ -1,12 +1,16 @@
-version: 2.1
-
-orbs:
-  win: circleci/windows-tools@0.0.4
-
+version: 2
 jobs:
   build:
-    executor: win/preview-default
+    machine:
+      image: windows-server-2019
+      resource_class: windows.medium
+      shell: powershell.exe -ExecutionPolicy Bypass
     steps:
-      - checkout
-      - run: echo 'Hello, Windows'
-      
+    - checkout
+    - run:
+        command: echo 'Hello, Windows'
+workflows:
+  version: 2
+  workflow:
+    jobs:
+    - build
