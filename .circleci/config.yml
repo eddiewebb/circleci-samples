@@ -11,6 +11,13 @@ workflows:
     unless: << pipeline.parameters.version_to_promote >>
     jobs:
       - build
+      - approve:
+          type: approval
+          requires:
+            - build
+      - deploy:
+         requires:
+            - approve
 
   promote:
     when: << pipeline.parameters.version_to_promote >>
