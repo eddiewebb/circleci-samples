@@ -4,15 +4,43 @@ orbs:
   common: eddiewebb/common_tasks@0.1.0
 
 parameters:
-  task_name:
-    default: "demo-task"
+  version_to_promote:
+    default: ""
     type: string
+
+
+workflows:
+  build:
+    unless: << pipeline.parameters.version_to_promote >>
+    jobs:
+      - build
+
+  promote:
+    when: << pipeline.parameters.version_to_promote >>
+    jobs:
+      - deploy
+
+
 
 jobs:
   build:
     docker:
     - image: circleci/node:10
     steps:
-    - run: echo "<<pipeline.parameters.task_name>>"
-    - common/run_shared_task:
-          task-name: <<pipeline.parameters.task_name>>
+    - run: |
+        echo "This build creates the artifact and publishes to an artifact repo or container registry."
+        echo "Alternately it could attach artifacts to the workflow in CircleCI."
+    - run: |
+        echo "To promote this build, please run:"
+        echo 'curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_API_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ "parameters": {"version_to_promote":"2.0.6"}}"'
+
+  deploy:
+    docker:
+    - image: circleci/node:10
+    steps:
+    - run: |
+        echo "Deploying: <<pipeline.parameters.version_to_promote>>"
+    - run: |
+        echo "We can use triAPI to get info about the previous workflow."
+        curl -X GET "https://circleci.com/api/v2/workflow/<<pipeline.parameters.version_to_promote>>?circle-token=${CIRCLE_TOKEN}" -H "Accept: application/json" > workflow.json
+        jq ''
