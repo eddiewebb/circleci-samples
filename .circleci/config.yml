@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  common: eddiewebb/common_tasks@0.1.0
-
 parameters:
   version_to_promote:
     default: ""
