@@ -22,7 +22,11 @@ workflows:
   promote:
     when: << pipeline.parameters.version_to_promote >>
     jobs:
-      - deploy
+      - approve:
+          type: approval
+      - deploy:
+         requires:
+            - approve
 
 
 
@@ -35,8 +39,8 @@ jobs:
         echo "This build creates the artifact and publishes to an artifact repo or container registry."
         echo "Alternately it could attach artifacts to the workflow in CircleCI."
     - run: |
-        echo "To promote this build, please run:"
-        echo curl -X POST \"https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=\${CIRCLE_TOKEN}\" -H \"Accept: application/json\" -H \"Content-Type: application/json\" -d \"{ \\\"branch\\\":\\\"${CIRCLE_BRANCH}\\\",\\\"parameters\\\": {\\\"version_to_promote\\\":\\\"2.0.6\\\"}}\"
+        curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ \"branch\":\"${CIRCLE_BRANCH}\",\"parameters\": {\"version_to_promote\":\"2.0.6\"}}"
+  
   deploy:
     docker:
     - image: circleci/node:10
