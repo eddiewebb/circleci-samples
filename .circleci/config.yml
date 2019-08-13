@@ -36,7 +36,4 @@ jobs:
     steps:
     - run: |
         echo "Deploying: <<pipeline.parameters.version_to_promote>>"
-    - run: |
-        echo "We can use triAPI to get info about the previous workflow."
-        curl -X GET "https://circleci.com/api/v2/workflow/<<pipeline.parameters.version_to_promote>>?circle-token=${CIRCLE_TOKEN}" -H "Accept: application/json" > workflow.json
-     
+   
