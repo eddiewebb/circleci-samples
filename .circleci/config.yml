@@ -32,7 +32,7 @@ jobs:
         echo "Alternately it could attach artifacts to the workflow in CircleCI."
     - run: |
         echo "To promote this build, please run:"
-        echo 'curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_API_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ "parameters": {"version_to_promote":"2.0.6"}}"'
+        echo curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_API_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ \"parameters\": {\"version_to_promote\":\"2.0.6\"}}"
 
   deploy:
     docker:
