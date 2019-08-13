@@ -21,8 +21,6 @@ workflows:
          requires:
             - approve
 
-
-
 jobs:
   build:
     docker:
