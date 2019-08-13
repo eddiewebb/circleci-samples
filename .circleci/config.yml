@@ -5,7 +5,6 @@ parameters:
     default: ""
     type: string
 
-
 workflows:
   build:
     unless: << pipeline.parameters.version_to_promote >>
