@@ -16,4 +16,3 @@ jobs:
     - run: echo "<<pipeline.parameters.task_name>>"
     - common/run_shared_task:
           task-name: <<pipeline.parameters.task_name>>
-          
