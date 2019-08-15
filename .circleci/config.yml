@@ -5,7 +5,6 @@ parameters:
     default: ""
     type: string
 
-
 workflows:
   build:
     unless: << pipeline.parameters.version_to_promote >>
@@ -29,6 +28,7 @@ jobs:
     - run: |
         echo "This build creates the artifact and publishes to an artifact repo or container registry."
         echo "Alternately it could attach artifacts to the workflow in CircleCI."
+        echo "<< pipeline.number >>"
     - run: |
         curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ \"branch\":\"${CIRCLE_BRANCH}\",\"parameters\": {\"version_to_promote\":\"2.0.6\"}}"
   
