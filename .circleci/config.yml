@@ -1,41 +1,15 @@
 version: 2.1
 
 parameters:
-  version_to_promote:
-    default: ""
+  orb_version:
+    default: "latest"
     type: string
 
+orbs:
+  common: eddiewebb/common_tasks@dev:pull/2-d5a7f30f70b5661a422da83bda41507049e63bd1
 
 workflows:
-  build:
-    unless: << pipeline.parameters.version_to_promote >>
+  basic:
     jobs:
-      - build
-
-  promote:
-    when: << pipeline.parameters.version_to_promote >>
-    jobs:
-      - approve:
-          type: approval
-      - deploy:
-         requires:
-            - approve
-
-jobs:
-  build:
-    docker:
-    - image: circleci/node:10
-    steps:
-    - run: |
-        echo "This build creates the artifact and publishes to an artifact repo or container registry."
-        echo "Alternately it could attach artifacts to the workflow in CircleCI."
-    - run: |
-        curl -X POST "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/pipeline?circle-token=${CIRCLE_TOKEN}" -H "Accept: application/json" -H "Content-Type: application/json" -d "{ \"branch\":\"${CIRCLE_BRANCH}\",\"parameters\": {\"version_to_promote\":\"2.0.6\"}}"
-  
-  deploy:
-    docker:
-    - image: circleci/node:10
-    steps:
-    - run: |
-        echo "Deploying: <<pipeline.parameters.version_to_promote>>"
-   
+      - common/common_task:
+          task-name: demo-task
