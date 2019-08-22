@@ -13,3 +13,7 @@ workflows:
     jobs:
       - common/common_task:
           task-name: demo-task
+          post-steps:
+            # run 2nd invocation in same container
+            - common/run_shared_task:
+                task-name: demo-task
