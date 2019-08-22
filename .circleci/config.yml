@@ -6,7 +6,7 @@ parameters:
     type: string
 
 orbs:
-  common: eddiewebb/common_tasks@dev:local
+  common: eddiewebb/common_tasks@dev:pull/2-67cd95d4af5bf8c96a15e8adb1803af71213a8a9
 
 workflows:
   basic:
