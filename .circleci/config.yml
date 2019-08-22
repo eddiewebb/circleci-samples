@@ -6,7 +6,7 @@ parameters:
     type: string
 
 orbs:
-  common: eddiewebb/common_tasks@dev:pull/2-d5a7f30f70b5661a422da83bda41507049e63bd1
+  common: eddiewebb/common_tasks@dev:local
 
 workflows:
   basic:
@@ -17,3 +17,4 @@ workflows:
             # run 2nd invocation in same container
             - common/run_shared_task:
                 task-name: demo-task
+                
