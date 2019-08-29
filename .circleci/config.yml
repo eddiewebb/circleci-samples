@@ -1,20 +1,22 @@
 version: 2.1
 
 parameters:
-  orb_version:
-    default: "latest"
+  publish_target:
+    default: "" #empty values considered FALSEY
     type: string
 
-orbs:
-  common: eddiewebb/common_tasks@dev:pull/2-67cd95d4af5bf8c96a15e8adb1803af71213a8a9
+jobs:
+  build:
+    docker:
+      - image: cimg/base:latest
+    steps:
+      - run: echo "build and test"
+      - when: 
+          condition: <<pipeline.parameters.publish_target>>
+          steps:
+            - run:
+                name: Publish Ad-hoc .ipa to testflight
+                command: echo "Publishing <<pipeline.parameters.publish_target>> to testflight. "
 
-workflows:
-  basic:
-    jobs:
-      - common/common_task:
-          task-name: demo-task
-          post-steps:
-            # run 2nd invocation in same container
-            - common/run_shared_task:
-                task-name: demo-task
+    
                 
