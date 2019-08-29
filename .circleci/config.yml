@@ -5,18 +5,21 @@ parameters:
     default: "" #empty values considered FALSEY
     type: string
 
-jobs:
+workflows:
   build:
+    unless: <<pipeline.parameters.publish_target>>
+    jobs:
+      - sample_job:
+          name: Build It
+  share:
+    when: <<pipeline.parameters.publish_target>>
+    jobs:
+      - sample_job:
+          name: Share It
+
+jobs:
+  sample_job: #single job for example only, these would be 2 uniue jobs with independetn steps.
     docker:
       - image: cimg/base:latest
     steps:
-      - run: echo "build and test"
-      - when: 
-          condition: <<pipeline.parameters.publish_target>>
-          steps:
-            - run:
-                name: Publish Ad-hoc .ipa to testflight
-                command: echo "Publishing <<pipeline.parameters.publish_target>> to testflight. "
-
-    
-                
+      - run: echo "hi"
