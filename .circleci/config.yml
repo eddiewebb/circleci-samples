@@ -13,8 +13,13 @@ workflows:
     jobs:
       - common/common_task:
           task-name: demo-task
-          post-steps:
-            # run 2nd invocation in same container
-            - common/run_shared_task:
-                task-name: demo-task
+          pre-steps:
+
+            - run: |
+                if [ -z "$CIRCLE_PULL_REQUEST" ]; then              
+                  echo -e "No open pull request. Could be initial commit, give author a monent to initiate"
+                  sleep 30
+                  curl https://circleci.com/api/v1.1/project/gh/${CIRCLE_PROJECT_USERNAME}/{$CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}?circle-token=${CIRCLE_TOKEN} | jq '.pull_requests'
+                  circleci step halt
+                fi
                 
