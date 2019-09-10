@@ -17,9 +17,9 @@ workflows:
 
             - run: |
                 if [ -z "$CIRCLE_PULL_REQUEST" ]; then              
-                  echo -e "No open pull request. Could be initial commit, give author a monent to initiate"
+                  echo -e "No open pull request. Could be initial commit, give author a monent to initiate and abort otherwise"
                   sleep 30
-                  curl https://circleci.com/api/v1.1/project/gh/${CIRCLE_PROJECT_USERNAME}/{$CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}?circle-token=${CIRCLE_TOKEN} | jq '.pull_requests'
-                  circleci step halt
+                  curl https://circleci.com/api/v1.1/project/gh/${CIRCLE_PROJECT_USERNAME}/{$CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}?circle-token=${CIRCLE_TOKEN} > /tmp/buildinfo.json
+                  jq '.pull_requests' /tmp/buildinfo.json || $(echo "no PR"; circleci step halt)                 
                 fi
                 
