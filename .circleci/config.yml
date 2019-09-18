@@ -12,9 +12,9 @@ jobs:
     - checkout
     - run:
         name: Run integration tests
-        command: >
-          "set PATH=%PATH%;C:\Users\circleci\.local\bin \r\n"
-          "echo %PATH% \r\n"
-          "where state \r\n"
-          "state run integration-tests \r\n"
+        command: |
+          "set PATH=%PATH%;C:\Users\circleci\.local\bin \r
+          echo %PATH% \r
+          where state \r
+          state run integration-tests \r"
         shell: cmd.exe
