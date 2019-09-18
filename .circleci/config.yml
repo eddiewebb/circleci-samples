@@ -13,7 +13,7 @@ jobs:
     - run:
         name: Run integration tests
         command: |
-          "echo %PATH% \r
+          echo %PATH% \r
           where state \r
-          state run integration-tests \r"
+          state run integration-tests \r
         shell: cmd.exe
