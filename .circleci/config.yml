@@ -8,9 +8,10 @@ jobs:
     steps:
     - checkout
     - run:
-        command: echo 'Hello, Windows'
-workflows:
-  version: 2
-  workflow:
-    jobs:
-    - build
+        name: Run integration tests
+        command: |
+          "set PATH=%PATH%;C:\Users\circleci\.local\bin \r\n"
+          "echo %PATH% \r\n"
+          "where state \r\n"
+          "state run integration-tests \r\n"
+        shell: cmd.exe
