@@ -1,10 +1,13 @@
-version: 2
+version: 2.1
+
+orbs:
+  win: circleci/windows@1.0.0
+
 jobs:
   build:
-    machine:
-      image: windows-server-2019
-      resource_class: windows.medium
-      shell: powershell.exe -ExecutionPolicy Bypass
+    executor:
+      name: win/vs2019
+      shell: bash.exe
     steps:
     - checkout
     - run:
