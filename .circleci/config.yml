@@ -18,3 +18,4 @@ jobs:
           "where state \r\n"
           "state run integration-tests \r\n"
         shell: cmd.exe
+        
