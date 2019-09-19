@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  jira: eddiewebb/burps@dev:eddie
+  jira: circleci/jira@dev:no-fail-36f981c6c7a6508f6a4d55a9ecd088059781f971
 
 
 workflows:
