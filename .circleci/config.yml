@@ -8,4 +8,4 @@ workflows:
     jobs:
       - common/common_task:
           task-name: demo-task
-          executor: machine
+          executor: common/machine
