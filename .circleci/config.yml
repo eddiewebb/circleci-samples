@@ -1,20 +1,11 @@
-version: 2.1
-
-parameters:
-  orb_version:
-    default: "latest"
-    type: string
+version: 2.1  
 
 orbs:
-  common: eddiewebb/common_tasks@dev:pull/2-67cd95d4af5bf8c96a15e8adb1803af71213a8a9
+  common: eddiewebb/common_tasks@dev:machine-9c32b0b5a04cdf5bd4deb150aca5287f42b9c30a
 
 workflows:
   basic:
     jobs:
       - common/common_task:
           task-name: demo-task
-          post-steps:
-            # run 2nd invocation in same container
-            - common/run_shared_task:
-                task-name: demo-task
-                
+          executor: machine
