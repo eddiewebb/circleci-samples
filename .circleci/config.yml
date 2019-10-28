@@ -28,4 +28,3 @@ jobs:
           echo "pipeline.number: << pipeline.number >> "
           echo "pipeline.project_slug: << pipeline.project_slug >> "
           echo "pipeline.created_timestamp: << pipeline.created_timestamp >> "
-          echo "pipeline.trigger.branch: << pipeline.trigger.branch >> "
