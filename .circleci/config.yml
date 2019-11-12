@@ -1,30 +1,23 @@
 version: 2.1
 
-parameters:
-  publish_target:
-    default: "" #empty values considered FALSEY
-    type: string
-
 workflows:
   build:
-    unless: <<pipeline.parameters.publish_target>>
     jobs:
-      - sample_job:
-          name: Build It
-  share:
-    when: <<pipeline.parameters.publish_target>>
-    jobs:
-      - sample_job:
-          name: Share It
+      - sample_job
+  
 
 jobs:
   sample_job: #single job for example only, these would be 2 uniue jobs with independetn steps.
+    parallelism: 3
     docker:
       - image: cimg/base:stable
     steps:
       - run: echo "hi"
       - run: |
-          echo "pipeline.id: << pipeline.id >> "
-          echo "pipeline.number: << pipeline.number >> "
-          echo "pipeline.project_slug: << pipeline.project_slug >> "
-          echo "pipeline.created_timestamp: << pipeline.created_timestamp >> "
+          if [ $CIRCLE_NODE_INDEX -eq 0 ]; then
+            sleep 240
+          elif [ $CIRCLE_NODE_INDEX -eq 1 ]; then
+            exit 1
+          elif [ $CIRCLE_NODE_INDEX -eq 2 ]; then
+            exit 0
+          fi
