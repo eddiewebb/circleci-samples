@@ -1,11 +1,71 @@
-version: 2.1  
+version: 2.1
 
 orbs:
-  common: eddiewebb/common_tasks@dev:machine-9c32b0b5a04cdf5bd4deb150aca5287f42b9c30a
+  jira: circleci/jira@dev:KyleTryon-Expanded-regex-for-issue-scanning-6b451994e00a9eb9c24300468aebc487c84ae462
+
 
 workflows:
-  basic:
+  build-deploy:
     jobs:
-      - common/common_task:
-          task-name: demo-task
-          executor: common/machine
+      - component-A
+      - component-B
+      - integration:
+          requires:
+          - component-B
+      - deploy:
+          name: Dev East
+          requires: 
+          - integration
+      - deploy:
+          name: Test East
+          requires:
+          - Dev East
+          environment-type: testing
+      - deploy:
+          name: Prod East
+          requires:
+          - Test East
+          environment-type: production
+
+jobs:
+  component-A:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: exit 0
+      - jira/notify
+
+  component-B: #this job just ensutes that integration job get a higher component-B number than lint
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sleep 2
+      - jira/notify
+
+  integration:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: echo "hi Jira"
+      - jira/notify
+
+  deploy:
+    parameters:
+      environment-type:
+        type: string
+        default: development
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: echo "hi Jira"
+      - jira/notify:
+          job_type: deployment
+          environment_type: <<parameters.environment-type>>
