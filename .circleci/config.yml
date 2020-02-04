@@ -11,6 +11,7 @@ workflows:
             - build
 jobs:
   build:
+    parallelism: 4
     executor:
       name: node/default
       tag: '10.4'
