@@ -14,7 +14,7 @@ orbs:
               command: |
                 cat \<<EOF > ./start_recording.scpt
                 tell application "QuickTime Player"
-                  set recording to new screen recording --> document "Screen Recording"
+                  set recording to new screen recording
                   tell recording
                     start
                     delay 3
