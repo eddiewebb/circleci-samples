@@ -1,72 +1,70 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:KyleTryon-Expanded-regex-for-issue-scanning-6b451994e00a9eb9c24300468aebc487c84ae462
+  recorb:
+    executors:
+      default:
+        macos:  # indicate that we are using the macOS executor
+          xcode: 11.3.0
+    commands:
+      start:
+        steps:
+          - run: 
+              name: Start Quicktime Screencast
+              command:
+                cat \<<-EOF > ./start_recording.scpt
+                  tell application "QuickTime Player"
+                    set recording to new screen recording
+                    tell recording
+                      start
+                      delay 3
+                    end tell
+                  end tell
+                EOF
+                osascript ./start_recording.scpt
+
+      stop:
+        steps:
+          - run:
+              when: always 
+              name: Start Quicktime Screencast
+              command:
+                cat \<<-EOF > ./stop_recording.scpt              
+                  tell application "QuickTime Player"
+                    set recording to document "screen recording"
+                    tell recording
+                      pause
+                      set current_path to do shell script "pwd"
+                      set file_path to current_path & "/testrecording.mov"
+                      save in (file_path as POSIX file)
+                      -- export in ("../testrecording.mov" as POSIX file) using settings preset "480p"
+                      stop
+                      return "Test recording saved to " & file_path
+                      close
+                    end tell
+                  end tell
+                EOF
+                osascript ./stop_recording.scpt
+          - store_artifacts:
+              path: testrecording.mov
+              destination: testrecording.mov
+    jobs:
+      wrap:
+        parameters:
+          steps:
+            type: steps
+            description: steps to be captured by recordin
+        executor: default
+        steps:
+          - start
+          - steps: <<parameters.steps>>
+          - stop
+
 
 
 workflows:
   build-deploy:
     jobs:
-      - component-A
-      - component-B
-      - integration:
-          requires:
-          - component-B
-      - deploy:
-          name: Dev East
-          requires: 
-          - integration
-      - deploy:
-          name: Test East
-          requires:
-          - Dev East
-          environment-type: testing
-      - deploy:
-          name: Prod East
-          requires:
-          - Test East
-          environment-type: production
-
-jobs:
-  component-A:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: exit 0
-      - jira/notify
-
-  component-B: #this job just ensutes that integration job get a higher component-B number than lint
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: sleep 2
-      - jira/notify
-
-  integration:
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo "hi Jira"
-      - jira/notify
-
-  deploy:
-    parameters:
-      environment-type:
-        type: string
-        default: development
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo "hi Jira"
-      - jira/notify:
-          job_type: deployment
-          environment_type: <<parameters.environment-type>>
-          
+      - recorb/wrap:
+          steps:
+            - run: open -a safari https://edwardawebb.com
