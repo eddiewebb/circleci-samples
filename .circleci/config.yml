@@ -5,44 +5,44 @@ orbs:
     executors:
       default:
         macos:  # indicate that we are using the macOS executor
-          xcode: 11.3.0
+          xcode: 10.0.0
     commands:
       start:
         steps:
           - run: 
               name: Start Quicktime Screencast
-              command:
-                cat \<<-EOF > ./start_recording.scpt
-                  tell application "QuickTime Player"
-                    set recording to new screen recording
-                    tell recording
-                      start
-                      delay 3
-                    end tell
+              command: |
+                cat \<<EOF > ./start_recording.scpt
+                tell application "QuickTime Player"
+                  set recording to new screen recording
+                  tell recording
+                    start
+                    delay 3
                   end tell
+                end tell
                 EOF
-                osascript ./start_recording.scpt
+                osascript ./start_recording.scpt &
 
       stop:
         steps:
           - run:
               when: always 
               name: Start Quicktime Screencast
-              command:
-                cat \<<-EOF > ./stop_recording.scpt              
-                  tell application "QuickTime Player"
-                    set recording to document "screen recording"
-                    tell recording
-                      pause
-                      set current_path to do shell script "pwd"
-                      set file_path to current_path & "/testrecording.mov"
-                      save in (file_path as POSIX file)
-                      -- export in ("../testrecording.mov" as POSIX file) using settings preset "480p"
-                      stop
-                      return "Test recording saved to " & file_path
-                      close
-                    end tell
+              command: |
+                cat \<<EOF > ./stop_recording.scpt              
+                tell application "QuickTime Player"
+                  set recording to document "screen recording"
+                  tell recording
+                    pause
+                    set current_path to do shell script "pwd"
+                    set file_path to current_path & "/testrecording.mov"
+                    save in (file_path as POSIX file)
+                    -- export in ("../testrecording.mov" as POSIX file) using settings preset "480p"
+                    stop
+                    return "Test recording saved to " & file_path
+                    close
                   end tell
+                end tell
                 EOF
                 osascript ./stop_recording.scpt
           - store_artifacts:
