@@ -31,7 +31,7 @@ orbs:
               command: |
                 cat \<<EOF > ./stop_recording.scpt              
                 tell application "QuickTime Player"
-                  set recording to document "screen recording"
+                  set recording to document "Screen Recording"
                   tell recording
                     pause
                     set current_path to do shell script "pwd"
