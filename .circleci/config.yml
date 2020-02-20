@@ -56,11 +56,20 @@ jobs:
       - checkout
       - run: echo "${SAME_VARIABLE}"
       - run: |
-          if [ "$SAME_VARIABLE" -eq "TEST" ]; then
-            echo "test var"
-          else
-            echo "prod var"
-          fi
+          case "${SAME_VARIABLE}" in
+            "project")
+              echo "project level variable"
+              ;;
+            "test")
+              echo "test level variable"
+              ;;
+            "production")
+              echo "prod level variable"
+              ;;
+            *)
+              echo "variable unknown"
+              ;;
+            esac
       - jira/notify:
           job_type: deployment
           environment_type: <<parameters.environment-type>>
