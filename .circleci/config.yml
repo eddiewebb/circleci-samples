@@ -58,13 +58,13 @@ jobs:
       - run: |
           case "${SAME_VARIABLE}" in
             "project")
-              echo "project level variable"
+              echo "proj level variable"
               ;;
             "test")
-              echo "test level variable"
+              echo "tes-t level variable"
               ;;
             "production")
-              echo "prod level variable"
+              echo "pro-d level variable"
               ;;
             *)
               echo "variable unknown"
