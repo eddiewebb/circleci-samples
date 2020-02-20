@@ -8,21 +8,26 @@ workflows:
   build-deploy:
     jobs:
       - component-B
+
+      # The deploy jobs below use the same steps/execution, but different vaalues of `SAME_VARIABLE`
       - deploy:
           name: Dev East
           requires: 
           - component-B
+          # no context provided, will use project level value
       - deploy:
           name: Test East
           requires:
           - Dev East
           environment-type: testing
+          # test context
           context: AWS-test
       - deploy:
           name: Prod East
           requires:
           - Test East
           environment-type: production
+          # prod context
           context: AWS-prod
 
 jobs:
@@ -54,7 +59,9 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      # circleCI will mask known variables from project or context.
       - run: echo "${SAME_VARIABLE}"
+      # simple switch to demonstrate that dev, test and deploy are given unique values
       - run: |
           case "${SAME_VARIABLE}" in
             "project")
