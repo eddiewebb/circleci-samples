@@ -23,7 +23,7 @@ workflows:
           requires:
           - Test East
           environment-type: production
-          context: AWS-Prod
+          context: AWS-prod
 
 jobs:
   component-B: #this job just ensutes that integration job get a higher component-B number than lint
