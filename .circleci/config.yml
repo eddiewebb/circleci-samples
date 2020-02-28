@@ -1,5 +1,10 @@
 version: 2.1
 
+parameters:
+  jira-build-num:
+    type: string
+    default: <<pipeline.number>>
+
 orbs:
   jira: circleci/jira@dev:02deb17
 
@@ -37,7 +42,7 @@ jobs:
     steps:
       - checkout
       - run: echo "<<pipeline.number>>"
-      - run: echo " <<pipeline.number>> "
+      - run: echo "<< pipeline.parameters.jira-build-num >> "
       - jira/notify
 
   integration:
