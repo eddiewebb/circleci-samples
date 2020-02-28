@@ -1,8 +1,7 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:bccba3d
-
+  jira: circleci/jira@dev:02deb17
 
 workflows:
   build-deploy:
