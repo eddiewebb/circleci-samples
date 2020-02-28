@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:KyleTryon-Expanded-regex-for-issue-scanning-6b451994e00a9eb9c24300468aebc487c84ae462
+  jira: circleci/jira@dev:bccba3d
 
 
 workflows:
