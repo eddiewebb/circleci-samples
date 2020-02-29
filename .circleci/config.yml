@@ -6,6 +6,7 @@ orbs:
 workflows:
   build-deploy:
     jobs:
+      - component-A
       - component-B
 
       # The deploy jobs below use the same steps/execution, but different vaalues of `SAME_VARIABLE`
@@ -30,13 +31,21 @@ workflows:
           context: AWS-prod
 
 jobs:
-  component-B: #this job just ensutes that integration job get a higher component-B number than lint
+  component-A: #this job just ensutes that integration job get a higher component-B number than lint
     docker:
       - image: circleci/node:10
     working_directory: ~/repo
     steps:
       - checkout
       - run: echo "<<pipeline.number>>"
+      - jira/notify
+  component-B: #this job just ensutes that integration job get a higher component-B number than lint
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sleep 4 && echo "<<pipeline.number>>"
       - jira/notify
 
   integration:
