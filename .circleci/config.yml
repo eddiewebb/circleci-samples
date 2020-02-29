@@ -6,15 +6,8 @@ orbs:
 workflows:
   build-deploy:
     jobs:
-      - component-A
       - component-B
 
-      # The deploy jobs below use the same steps/execution, but different vaalues of `SAME_VARIABLE`
-      - deploy:
-          name: Dev East
-          requires: 
-          - component-B
-          # no context provided, will use project level value
       - deploy:
           name: Test East
           requires:
