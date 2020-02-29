@@ -7,7 +7,6 @@ workflows:
   build-deploy:
     jobs:
       - component-B
-
       - deploy:
           name: Test East
           requires:
