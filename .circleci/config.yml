@@ -42,7 +42,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sleep 1
+      - run: sleep 600
       - jira/notify
 
   integration:
