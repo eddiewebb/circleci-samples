@@ -7,6 +7,11 @@ workflows:
   build-deploy:
     jobs:
       - component-B
+      - hold:
+          name: Dev East
+          type: approval
+          requires:
+          - component-B
       - deploy:
           name: Test East
           requires:
@@ -37,7 +42,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sleep 4 && echo "<<pipeline.number>>"
+      - run: sleep 1
       - jira/notify
 
   integration:
