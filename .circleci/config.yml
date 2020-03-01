@@ -1,11 +1,12 @@
 version: 2.1
 
 orbs:
-  jira: circleci/jira@dev:ccd6b20
+  jira: circleci/jira@dev:c883697
 
 workflows:
   build-deploy:
     jobs:
+      - component-A
       - component-B
       - hold:
           name: Dev East
@@ -28,7 +29,7 @@ workflows:
           context: AWS-prod
 
 jobs:
-  component-A: #this job just ensutes that integration job get a higher component-B number than lint
+  component-A: 
     docker:
       - image: cimg/node:10.18
     working_directory: ~/repo
@@ -36,13 +37,13 @@ jobs:
       - checkout
       - run: exit 0
       - jira/notify
-  component-B: #this job just ensutes that integration job get a higher component-B number than lint
+  component-B: 
     docker:
       - image: cimg/node:10.18
     working_directory: ~/repo
     steps:
       - checkout
-      - run: sleep 1
+      - run: sleep 20
       - jira/notify
 
   integration:
