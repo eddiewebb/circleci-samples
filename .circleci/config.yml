@@ -7,15 +7,10 @@ workflows:
   build-deploy:
     jobs:
       - component-B
-      - hold:
-          name: Dev East
-          type: approval
-          requires:
-          - component-B
       - deploy:
           name: Test East
           requires:
-          - Dev East
+          - component-B
           environment-type: testing
           # test context
           context: AWS-test
