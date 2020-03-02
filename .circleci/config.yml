@@ -28,7 +28,6 @@ workflows:
           # prod context
           context: AWS-prod
 
-
 jobs:
   component-A: 
     docker:
