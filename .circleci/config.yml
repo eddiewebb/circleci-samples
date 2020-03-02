@@ -86,4 +86,5 @@ jobs:
       - jira/notify:
           job_type: deployment
           environment_type: <<parameters.environment-type>>
+          debug: true
           
