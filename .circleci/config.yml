@@ -3,7 +3,6 @@ version: 2.1
 orbs:
   jira: circleci/jira@dev:eddie
 
-
 workflows:
   build-deploy:
     jobs:
