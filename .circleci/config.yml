@@ -31,24 +31,20 @@ workflows:
 jobs:
   component-A: 
     docker:
-      - image: cimg/node:10.18
+      - image: cimg/base:stable
     working_directory: ~/repo
     steps:
-      - checkout
-      - run: exit 0
       - jira/notify
   component-B: 
     docker:
-      - image: cimg/node:10.18
+      - image: cimg/base:stable
     working_directory: ~/repo
     steps:
-      - checkout
-      - run: sleep 20
       - jira/notify
 
   integration:
     docker:
-      - image: cimg/node:10.18
+      - image: cimg/base:stable
     working_directory: ~/repo
     steps:
       - checkout
@@ -61,7 +57,7 @@ jobs:
         type: string
         default: development
     docker:
-      - image: cimg/node:10.18
+      - image: cimg/base:stable
     working_directory: ~/repo
     steps:
       - checkout
