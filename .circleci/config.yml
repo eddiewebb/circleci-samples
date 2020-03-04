@@ -5,7 +5,7 @@ orbs:
     executors:
       default:
         macos:  # indicate that we are using the macOS executor
-          xcode: 11.4
+          xcode: 11.3.1
     commands:
       start:
         steps:
