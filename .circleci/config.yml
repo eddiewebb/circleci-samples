@@ -13,12 +13,15 @@ orbs:
               name: Start Quicktime Screencast
               command: |
                 cat \<<EOF > ./start_recording.scpt
+                tell application "System Events"
+                   activate
+                   set UI elements enabled to true
+                end tell
                 tell application "QuickTime Player"
-                  set recording to new screen recording
-                  tell recording
-                    start
-                    delay 3
-                  end tell
+                   activate
+                   close every window saving no
+                   new screen recording
+                   document "Screen Recording" start
                 end tell
                 EOF
                 osascript ./start_recording.scpt &
@@ -29,13 +32,16 @@ orbs:
               when: always 
               name: Stop Quicktime Screencast
               command: |
-                cat \<<EOF > ./stop_recording.scpt              
+                cat \<<EOF > ./stop_recording.scpt    
+                tell application "System Events"
+                   activate
+                   set UI elements enabled to true
+                end tell
                 tell application "QuickTime Player"
-                  set recording to first document
-                  tell recording
+                  tell document "Screen Recording"
                     pause
                     set current_path to do shell script "pwd"
-                    set file_path to current_path & "/testrecording.mov"
+                    set file_path to "/tmp/testrecording.mov"
                     save in (file_path as POSIX file)
                     -- export in ("../testrecording.mov" as POSIX file) using settings preset "480p"
                     stop
@@ -46,8 +52,8 @@ orbs:
                 EOF
                 osascript ./stop_recording.scpt
           - store_artifacts:
-              path: testrecording.mov
-              destination: testrecording.mov
+              path: /tmp/testrecording.mov
+              destination: Screencast.mov
     jobs:
       wrap:
         parameters:
