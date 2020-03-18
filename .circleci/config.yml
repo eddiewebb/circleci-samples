@@ -1,89 +1,23 @@
-version: 2.1
-
 orbs:
-  jira: circleci/jira@dev:eddie
-
-workflows:
-  build-deploy:
-    jobs:
-      - component-A
-      - component-B
-      - hold:
-          name: Dev East
-          type: approval
-          requires:
-          - component-B
-      - deploy:
-          name: Test East
-          requires:
-          - Dev East
-          environment-type: testing
-          # test context
-          context: AWS-test
-      - deploy:
-          name: Prod East
-          requires:
-          - Test East
-          environment-type: production
-          # prod context
-          context: AWS-prod
+  win: circleci/windows@2.4.0
+  kubernetes: circleci/kubernetes@0.9.0
+  aws-eks: circleci/aws-eks@0.2.6
+  aws-ecr: circleci/aws-ecr@6.7.1
 
 jobs:
-  component-A: 
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/repo
-    steps:
-      - jira/notify:
-          debug: true
-  component-B: 
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/repo
-    steps:
-      - jira/notify:
-          debug: true
-
-  integration:
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: echo "hi Jira"
-      - jira/notify:
-          debug: true
-
-  deploy:
-    parameters:
-      environment-type:
-        type: string
-        default: development
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/repo
-    steps:
-      - checkout
-      # circleCI will mask known variables from project or context.
-      - run: echo "${SAME_VARIABLE}"
-      # simple switch to demonstrate that dev, test and deploy are given unique values
-      - run: |
-          case "${SAME_VARIABLE}" in
-            "project")
-              echo "proj level variable"
-              ;;
-            "test")
-              echo "tes-t level variable"
-              ;;
-            "production")
-              echo "pro-d level variable"
-              ;;
-            *)
-              echo "variable unknown"
-              ;;
-            esac
-      - jira/notify:
-          job_type: deployment
-          environment_type: <<parameters.environment-type>>
-          debug: true
-          
+  build:
+    executor:
+      name: win/default
+      shell: bash.exe
+    steps: 
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_URL
+          aws-access-key-id: SI_RAFA_GLOBAL_ACCESS_KEY
+          aws-secret-access-key: SI_RAFA_GLOBAL_SECRET_KEY
+          checkout: false
+          create-repo: true
+          dockerfile: 'Dockerfile.rc'
+          path: './rc-service/Source'
+          region: SI_RAFA_GLOBAL_REGION
+          repo: '${AWS_ECR_REPO}'
+          tag: 'latest,${GIT_HASH}'
