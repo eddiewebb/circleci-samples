@@ -23,3 +23,5 @@ jobs:
           region: SI_RAFA_GLOBAL_REGION
           repo: '${AWS_ECR_REPO}'
           tag: 'latest,${GIT_HASH}'
+          pre-steps:
+            - run: export PATH="/c/Users/circleci/AppData/Roaming/Python/Python37/Scripts:$PATH"
