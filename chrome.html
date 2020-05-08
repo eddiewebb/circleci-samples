@@ -14,15 +14,12 @@ window['__onGCastApiAvailable'] = function(isAvailable) {
 };
     initializeCastApi = function() {
   cast.framework.CastContext.getInstance().setOptions({
-    receiverApplicationId: applicationId,
+    receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
     autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
   });
+      var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
 };
-    cast.framework.CastContext.getInstance().setOptions({
-  receiverApplicationId:
-    chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
-});
-    var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+    
 </script>
 </body>
 </html>
