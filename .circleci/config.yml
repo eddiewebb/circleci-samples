@@ -33,7 +33,7 @@ jobs:
       - run: touch newfile-${CIRCLE_NODE_INDEX}
       - persist_to_workspace:
           root: .
-          paths: [newfile]
+          paths: [newfile*]
 
   coverage:
     executor: php
