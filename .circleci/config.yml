@@ -28,13 +28,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Start PHP Server
+          name: Show files
           command: ls -la
       - run: touch newfile
       - persist_to_workspace:
-          root: new
-          paths:
-              - newfile
+          root: newfile
 
   coverage:
     executor: php
@@ -42,7 +40,8 @@ jobs:
     steps:
       - attach_workspace:
           at: .
-          name: Start PHP Server
+      - run:
+          name: Showfiles
           command: ls -la
   
 workflows:
