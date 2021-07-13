@@ -3,7 +3,7 @@ version: 2.1
 executors:
   php:
     docker:
-      - image: cimg/php:7.4
+      - image: cimg/base:2021.07
 
 jobs:
   prepare-dependencies:
@@ -55,5 +55,5 @@ workflows:
             - prepare-dependencies
       - coverage:
           requires:
-            - prepare-dependencies
+            - phpunit
             
