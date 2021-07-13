@@ -32,7 +32,8 @@ jobs:
           command: ls -la
       - run: touch newfile
       - persist_to_workspace:
-          root: newfile
+          root: .
+          paths: [newfile]
 
   coverage:
     executor: php
