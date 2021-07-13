@@ -1,27 +1,59 @@
 version: 2.1
 
-orbs:
-  win: circleci/windows@2.4.0
-  kubernetes: circleci/kubernetes@0.9.0
-  aws-eks: circleci/aws-eks@0.2.6
-  aws-ecr: circleci/aws-ecr@6.7.1
+executors:
+  php:
+    docker:
+      - image: cimg/php:7.4
 
 jobs:
-  build:
-    executor:
-      name: win/default
-      shell: bash.exe
-    steps: 
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_URL
-          aws-access-key-id: SI_RAFA_GLOBAL_ACCESS_KEY
-          aws-secret-access-key: SI_RAFA_GLOBAL_SECRET_KEY
-          checkout: false
-          create-repo: true
-          dockerfile: 'Dockerfile.rc'
-          path: './rc-service/Source'
-          region: SI_RAFA_GLOBAL_REGION
-          repo: '${AWS_ECR_REPO}'
-          tag: 'latest,${GIT_HASH}'
-          pre-steps:
-            - run: export PATH="/c/Users/circleci/AppData/Roaming/Python/Python37/Scripts:$PATH"
+  prepare-dependencies:
+    executor: php
+    resource_class: small
+    steps:
+      - checkout
+      - run: |
+          mkdir tmp
+          touch tmp/foo
+          touch baz
+          touch biz
+      - persist_to_workspace:
+          root: .
+          paths:
+              - .
+  phpunit:
+    executor: php
+    #parallelism: 80
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Start PHP Server
+          command: ls -la
+      - run: touch newfile
+      - persist_to_workspace:
+          root: new
+          paths:
+              - newfile
+
+  coverage:
+    executor: php
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: .
+          name: Start PHP Server
+          command: ls -la
+  
+workflows:
+  version: 2
+  test-deploy:
+    jobs:
+      - prepare-dependencies
+      - phpunit:
+          requires:
+            - prepare-dependencies
+      - coverage:
+          requires:
+            - prepare-dependencies
+            
