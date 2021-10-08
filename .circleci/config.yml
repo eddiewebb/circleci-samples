@@ -1,59 +1,59 @@
 version: 2.1
 
+orbs:
+  secret-provider:
+    commands:
+      prepare-secrets:
+        steps:
+          - run:
+              name: Setup deployment secrets for current branch
+              command: |
+                # decide which set of variables to rename.
+                echo "Evaluating suffix based on branch name: ${CIRCLE_BRANCH}"
+                SUFFIX="_dev"
+                case "${CIRCLE_BRANCH}" in
+                  main)
+                    SUFFIX="_production"
+                    ;;
+                  master)
+                    SUFFIX="_production"
+                    ;;
+                  stag*)
+                    SUFFIX="_staging"
+                    ;;
+                  *)
+                    echo "Current branch does not match policy, default to dev secrets."
+                    ;;
+                esac
+                echo "Secret suffix set to: ${SUFFIX}"
+                # use suffix to rename secrets
+                for secret in `env | grep "${SUFFIX}="`; do
+                  source_key=${secret/=*/}
+                  target_key=${secret/$SUFFIX*/}
+                  echo "Found matching env. variable named: ${source_key} to copy over as ${target_key}"
+                  echo "export ${secret/$SUFFIX*/}=${secret/*$SUFFIX=/}" >> $BASH_ENV
+                done
+                cat $BASH_ENV
+
+
+
+
+
 executors:
-  php:
+  base:
     docker:
       - image: cimg/base:2021.07
 
 jobs:
-  prepare-dependencies:
-    executor: php
+  deploy:
+    executor: base
     resource_class: small
     steps:
       - checkout
-      - run: |
-          mkdir tmp
-          touch tmp/foo
-          touch baz
-          touch biz
-      - persist_to_workspace:
-          root: .
-          paths:
-              - .
-  phpunit:
-    executor: php
-    parallelism: 4
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Show files
-          command: ls -la
-      - run: touch newfile-${CIRCLE_NODE_INDEX}
-      - persist_to_workspace:
-          root: .
-          paths: [newfile*]
+      - secret-provider/prepare-secrets
+      - env
+      - echo ${mysecret}
 
-  coverage:
-    executor: php
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Showfiles
-          command: ls -la
-  
-workflows:
-  version: 2
-  test-deploy:
-    jobs:
-      - prepare-dependencies
-      - phpunit:
-          requires:
-            - prepare-dependencies
-      - coverage:
-          requires:
-            - phpunit
+
+
             
