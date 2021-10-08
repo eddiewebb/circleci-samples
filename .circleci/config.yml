@@ -5,6 +5,8 @@ orbs:
     commands:
       prepare-secrets:
         parameters:
+          # if using non-BASH images (alpine uses ash, others might have zsh, change profle path to match)
+          # https://circleci.com/docs/2.0/env-vars/#using-parameters-and-bash-environment
           profile-path:
             type: string
             default: $BASH_ENV
@@ -57,7 +59,7 @@ jobs:
       - secret-provider/prepare-secrets
       - run:
           env
-          echo ${mysecret}
+          echo ${MYSECRET}
 
 
 workflows:
