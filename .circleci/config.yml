@@ -51,9 +51,13 @@ jobs:
     steps:
       - checkout
       - secret-provider/prepare-secrets
-      - env
-      - echo ${mysecret}
+      - run:
+          env
+          echo ${mysecret}
 
 
-
+workflows:
+  primary:
+    jobs:
+      - deploy
             
