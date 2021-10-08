@@ -59,7 +59,7 @@ jobs:
       - secret-provider/prepare-secrets
       - run:
           env
-          echo ${MYSECRET}
+          echo ${MY_SECRET}
 
 
 workflows:
