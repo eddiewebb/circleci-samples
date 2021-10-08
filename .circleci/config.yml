@@ -4,6 +4,10 @@ orbs:
   secret-provider:
     commands:
       prepare-secrets:
+        parameters:
+          profile-path:
+            type: string
+            default: $BASH_ENV
         steps:
           - run:
               name: Setup deployment secrets for current branch
@@ -31,9 +35,9 @@ orbs:
                   source_key=${secret/=*/}
                   target_key=${secret/$SUFFIX*/}
                   echo "Found matching env. variable named: ${source_key} to copy over as ${target_key}"
-                  echo "export ${secret/$SUFFIX*/}=${secret/*$SUFFIX=/}" >> /etc/profile
+                  echo "export ${secret/$SUFFIX*/}=${secret/*$SUFFIX=/}" >> <<parameters.profile-path>>
                 done
-                cat /etc/profile
+                cat <<parameters.profile-path>>
 
 
 
