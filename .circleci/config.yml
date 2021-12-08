@@ -1,59 +1,23 @@
 version: 2.1
 
 executors:
-  php:
+  base:
     docker:
       - image: cimg/base:2021.07
 
 jobs:
-  prepare-dependencies:
-    executor: php
+  try-it:
+    executor: base
     resource_class: small
     steps:
-      - checkout
-      - run: |
-          mkdir tmp
-          touch tmp/foo
-          touch baz
-          touch biz
-      - persist_to_workspace:
-          root: .
-          paths:
-              - .
-  phpunit:
-    executor: php
-    parallelism: 4
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Show files
-          command: ls -la
-      - run: touch newfile-${CIRCLE_NODE_INDEX}
-      - persist_to_workspace:
-          root: .
-          paths: [newfile*]
-
-  coverage:
-    executor: php
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Showfiles
-          command: ls -la
+      - run: echo "contents" > file1.txt
+      - run: echo "contents" > file2.txt
+      - store_artifacts:
+          name: Storing Artifacts
+          path: 'file*.txt'
   
 workflows:
   version: 2
   test-deploy:
     jobs:
-      - prepare-dependencies
-      - phpunit:
-          requires:
-            - prepare-dependencies
-      - coverage:
-          requires:
-            - phpunit
-            
+      - try-it
