@@ -16,7 +16,6 @@ jobs:
       - store_artifacts:
           name: Storing Artifacts
           path: artifacts
-          destination: ''
   
 workflows:
   version: 2
