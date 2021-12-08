@@ -12,9 +12,11 @@ jobs:
     steps:
       - run: echo "contents" > file1.txt
       - run: echo "contents" > file2.txt
+      - run: mkdir artifacts && mv file* artifacts
       - store_artifacts:
           name: Storing Artifacts
-          path: 'file*.txt'
+          path: artifacts
+          destination: ''
   
 workflows:
   version: 2
