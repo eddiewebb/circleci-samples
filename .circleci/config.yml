@@ -34,3 +34,4 @@ commands:
                     unzip awscliv2.zip
                     sudo ./aws/install
                     echo 'export AWS_PAGER=""' | tee -a $BASH_ENV
+                    echo "AWS_WEB_IDENTITY_TOKEN_FILE=$CIRCLE_OIDC_TOKEN" | tee -a $BASH_ENV
