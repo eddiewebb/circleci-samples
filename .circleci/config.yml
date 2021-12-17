@@ -6,19 +6,31 @@ executors:
       - image: cimg/base:2021.07
 
 jobs:
-  try-it:
+  try-it:        
+    environment:
+      AWS_ROLE_ARN: arn:aws:iam::660990364978:role/eddie-oidc-assume-role # This needs to be the ARN of the IAM role you created in Prerequisite 4
+      AWS_DEFAULT_REGION: us-east-1
     executor: base
     resource_class: small
     steps:
-      - run: echo "contents" > file1.txt
-      - run: echo "contents" > file2.txt
-      - run: mkdir artifacts && mv file* artifacts
-      - store_artifacts:
-          name: Storing Artifacts
-          path: artifacts
+      - install-awscli
+      - run: aws sts get-caller-identity
+
   
 workflows:
   version: 2
   test-deploy:
     jobs:
       - try-it
+
+commands:
+  install-awscli: # https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html
+      steps:
+          - run:
+                name: Install awscli
+                working_directory: /tmp/awscli
+                command: |
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    ./aws/install
+                    echo 'export AWS_PAGER=""' | tee -a $BASH_ENV
