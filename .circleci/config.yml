@@ -1,59 +1,21 @@
 version: 2.1
 
 executors:
-  php:
+  default:
     docker:
-      - image: cimg/base:2021.07
+      - image: cimg/node:14.18.2
 
 jobs:
-  prepare-dependencies:
-    executor: php
+  job-1:
+    executor: default
     resource_class: small
     steps:
-      - checkout
-      - run: |
-          mkdir tmp
-          touch tmp/foo
-          touch baz
-          touch biz
-      - persist_to_workspace:
-          root: .
-          paths:
-              - .
-  phpunit:
-    executor: php
-    parallelism: 4
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Show files
-          command: ls -la
-      - run: touch newfile-${CIRCLE_NODE_INDEX}
-      - persist_to_workspace:
-          root: .
-          paths: [newfile*]
-
-  coverage:
-    executor: php
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Showfiles
-          command: ls -la
+      - run: whoami
+      - run: ls -la /root
+      - run: ls -la /root/.npm
   
 workflows:
   version: 2
   test-deploy:
     jobs:
-      - prepare-dependencies
-      - phpunit:
-          requires:
-            - prepare-dependencies
-      - coverage:
-          requires:
-            - phpunit
-            
+      - job-1
