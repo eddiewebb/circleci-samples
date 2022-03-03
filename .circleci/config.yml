@@ -39,7 +39,6 @@ jobs:
             - run: |
                 echo '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}' > parameters.json
                 cat parameters.json
-            - run: env
             - continuation/continue:
                 configuration_path: gogo.yml
                 parameters: parameters.json
@@ -47,7 +46,8 @@ jobs:
           condition:
             equal: [ "2", <<pipeline.parameters.invocation>> ]
           steps:            
-            - run: echo "export CIRCLE_CONTINUATION_KEY=<<pipeline.parameters.continuation-key>> >> $BASH_ENV"
+            - run: echo "export CIRCLE_CONTINUATION_KEY=<<pipeline.parameters.continuation-key>>" >> $BASH_ENV
+            - run: env
             - continuation/continue:
                 configuration_path: gogo.yml
                 parameters: '{"keep-going":false, "invocation":"3"}'
