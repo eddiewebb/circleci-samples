@@ -24,6 +24,7 @@ jobs:
     resource_class: small
     steps:
       - run: echo <<pipeline.parameters.invocation>>
+      - checkout
       - run:
           name: mock continuation config
           command: |
