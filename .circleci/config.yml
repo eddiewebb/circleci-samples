@@ -38,7 +38,7 @@ jobs:
           steps:            
             - continuation/continue:
                 configuration_path: gogo.yml
-                parameters: '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}'
+                parameters: '{"keep-going":true, "invocation":"2","continuation-key":"$CIRCLE_CONTINUATION_KEY"}'
       - when:
           condition:
             equal: [ "2", <<pipeline.parameters.invocation>> ]
