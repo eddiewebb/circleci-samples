@@ -1,4 +1,17 @@
 version: 2.1
+setup: true
+
+parameters:
+  invocation:
+    type: string
+    default: "1"
+  keep-going:
+    type: boolean
+    default: true
+  
+
+orbs:
+  continuation: circleci/continuation@0.2.0
 
 executors:
   default:
@@ -6,16 +19,45 @@ executors:
       - image: cimg/node:14.18.2
 
 jobs:
-  job-1:
+  keep-going:
     executor: default
     resource_class: small
     steps:
-      - run: whoami
-      - run: ls -la /root
-      - run: ls -la /root/.npm
+      - run: echo <<pipeline.parameters.invocation>>
+      - run:
+          name: mock continuation config
+          command: |
+            cat .circleci/config.yml | sed 's/setup: true/setup: false/' > gogo.yml
+      - when:
+          condition:
+            equal: [ 1, <<pipeline.parameters.invocation>> ]
+          steps:            
+            - continuation/continue:
+                configuration_path: gogo.yml
+                parameters: '{"keep-going":true, "invocation":"2"}'
+      - when:
+          condition:
+            equal: [ 2, <<pipeline.parameters.invocation>> ]
+          steps:            
+            - continuation/continue:
+                configuration_path: gogo.yml
+                parameters: '{"keep-going":false, "invocation":"3"}'
+
+  stop:
+    executor: default
+    resource_class: small
+    steps:
+      - run: echo "all done"
+
   
 workflows:
   version: 2
   test-deploy:
+    when: <<pipeline.parameters.keep-going>>
     jobs:
-      - job-1
+      - keep-going:
+          name: workflow-<<pipeline.parameters.invocation>>
+  stop:
+    unless: <<pipeline.parameters.keep-going>>
+    jobs:
+      - stop
