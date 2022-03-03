@@ -8,6 +8,9 @@ parameters:
   keep-going:
     type: boolean
     default: true
+  continuation-key:
+    type: string
+    default: ""
   
 
 orbs:
@@ -35,11 +38,12 @@ jobs:
           steps:            
             - continuation/continue:
                 configuration_path: gogo.yml
-                parameters: '{"keep-going":true, "invocation":"2"}'
+                parameters: '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}'
       - when:
           condition:
             equal: [ "2", <<pipeline.parameters.invocation>> ]
           steps:            
+            - echo "export CIRCLE_CONTINUATION_KEY=<<pipeline.parameters.continuation-key>> >> $BASH_ENV"
             - continuation/continue:
                 configuration_path: gogo.yml
                 parameters: '{"keep-going":false, "invocation":"3"}'
