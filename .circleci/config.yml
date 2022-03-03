@@ -43,7 +43,7 @@ jobs:
           condition:
             equal: [ "2", <<pipeline.parameters.invocation>> ]
           steps:            
-            - echo "export CIRCLE_CONTINUATION_KEY=<<pipeline.parameters.continuation-key>> >> $BASH_ENV"
+            - run: echo "export CIRCLE_CONTINUATION_KEY=<<pipeline.parameters.continuation-key>> >> $BASH_ENV"
             - continuation/continue:
                 configuration_path: gogo.yml
                 parameters: '{"keep-going":false, "invocation":"3"}'
