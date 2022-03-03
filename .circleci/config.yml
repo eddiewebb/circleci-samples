@@ -39,6 +39,7 @@ jobs:
             - run: |
                 echo '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}' > parameters.json
                 cat parameters.json
+            - run: env
             - continuation/continue:
                 configuration_path: gogo.yml
                 parameters: parameters.json
