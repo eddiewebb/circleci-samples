@@ -37,7 +37,7 @@ jobs:
             equal: [ "1", <<pipeline.parameters.invocation>> ]
           steps:            
             - run: |
-                echo '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}"' > parameters.json
+                echo '{"keep-going":true, "invocation":"2","continuation-key":"'$CIRCLE_CONTINUATION_KEY'"}' > parameters.json
                 cat parameters.json
             - continuation/continue:
                 configuration_path: gogo.yml
