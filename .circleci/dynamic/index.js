@@ -34,6 +34,7 @@ addSubWorkflowForDocs(mappings)
 // track workflows added to avoid duplication
 addedWorkflows = []
 
+
 let entries = Object.entries(mappings);
 function ammendWorkflowFor( path){
   //1 can we find a circle config for it
@@ -120,7 +121,6 @@ function addSubWorkflowForDocs(mappings){
 function harvestConfigFromWorkflow(subWorkflow){
   //worklfows only contian jobs, loop
   subWorkflow.jobs.forEach(jobHolder => {
-    console.log(jobHolder)
     myConfig.addJob(jobHolder.job);
     theWorkflow.addJob(jobHolder.job,jobHolder.parameters);
   });
@@ -132,6 +132,7 @@ function harvestConfigFromWorkflow(subWorkflow){
 function generateYaml(){
   console.log('All paths considered, generating config.');
     // The `stringify()` function on `CircleCI.Config` will return the CircleCI YAML equivalent.
+    appendFinallyWorkflow()
     const MyYamlConfig = myConfig.stringify();
     fs.writeFile('./dynamicConfig.yml', MyYamlConfig, (err) => {
       if (err) {
@@ -141,4 +142,28 @@ function generateYaml(){
     })
     const used = process.memoryUsage().heapUsed / 1024 / 1024;
     console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
+}
+
+function appendFinallyWorkflow(){
+  //if e2e condition...
+  
+  requires = [];
+  const finallyJob = new CircleCI.Job(`e2e-tests`, nodeExecutor);
+  // Add steps to job
+  finallyJob
+  .addStep(new CircleCI.commands.Checkout())
+  .addStep(
+    new CircleCI.commands.Run({
+      command: `echo defauklt job`,
+      name: `Finally Job - E2E`,
+    }),
+  )
+
+  addedWorkflows.forEach(workflow => {
+    console.log(workflow.jobs[workflow.jobs.length-1])
+    requires.push(workflow.jobs[workflow.jobs.length-1].job.name)
+  });
+
+  myConfig.addJob(finallyJob);
+  theWorkflow.addJob(finallyJob,{requires:requires});
 }
