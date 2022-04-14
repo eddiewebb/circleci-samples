@@ -15,7 +15,7 @@ jobs:
       - run:
           name: git changed paths
           command: |
-            bash .circleci/dynamic/gitpath.bash
+            bash .circleci/dynamic/gitpaths.bash
       - run:
           name: Generate config
           command: node .circleci/dynamic/index.js 
