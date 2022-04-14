@@ -1,21 +1,23 @@
-version: 2.1
+setup: true
 
-executors:
-  default:
-    docker:
-      - image: cimg/node:14.18.2
+version: 2.1
+orbs:
+  continuation: circleci/continuation@0.2.0
+  node: circleci/node@4.7.0
 
 jobs:
-  keep-going:
-    executor: default
-    resource_class: small
+  generate-config:
+    executor: node/default
     steps:
       - checkout
-      - run: bash rickroll.sh
-
-  
+      - node/install-packages:
+          app-dir: .circleci/dynamic
+      - run:
+          name: Generate config
+          command: node .circleci/dynamic/index.ts
+      - continuation/continue:
+          configuration_path: ./dynamicConfig.yml
 workflows:
-  version: 2
-  test-deploy:
+  dynamic-workflow:
     jobs:
-      - keep-going
+      - generate-config
