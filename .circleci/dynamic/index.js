@@ -1,4 +1,6 @@
-import CircleCI from '@circleci/circleci-config-sdk';
+
+const CircleCI = require("@circleci/circleci-config-sdk");
+const fs = require('fs');
 // Instantiate new Config
 const myConfig = new CircleCI.Config();
 // Create new Workflow
@@ -35,3 +37,10 @@ myWorkflow.addJob(nodeTestJob);
 
 // The `stringify()` function on `CircleCI.Config` will return the CircleCI YAML equivalent.
 const MyYamlConfig = myConfig.stringify();
+
+fs.writeFile('./dynamicConfig.yml', MyYamlConfig, (err) => {
+  if (err) {
+    console.log(err);
+    return
+  }
+})
