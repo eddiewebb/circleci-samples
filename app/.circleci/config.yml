@@ -1,0 +1,20 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+
+jobs:
+  app-build:
+    executor: node/default
+    steps:
+      - run: echo "boop"
+  app-test:
+    executor: node/default
+    steps:
+      - run: echo "boop"
+workflows:
+  app-workflow:
+    jobs:
+      - app-build
+      - app-test:
+          requires:
+            - app-build
