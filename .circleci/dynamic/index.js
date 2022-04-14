@@ -18,7 +18,7 @@ const nodeExecutor = new CircleCI.executor.DockerExecutor('cimg/node:lts');
 
 
 
-lineReader.eachLine('changedpaths.txt', function(line, last) {
+lineReader.eachLine('.circleci/dynamic/changedpaths.txt', function(line, last) {
   console.log(`Line from file: ${line}`);
 
   // Create Job and add it to the config
