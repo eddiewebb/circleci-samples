@@ -40,8 +40,14 @@ function ammendWorkflowFor(workflow, path){
     const pathRegEx = RegExp(key);
     if(pathRegEx.test(path)){
       console.log("Matching job found in JS mappings");
-      myConfig.addJob(value); //TODO dupe check if job shared
-      myWorkflow.addJob(value);
+      //console.log(value)
+      //console.log(myWorkflow.jobs)
+      if(myWorkflow.jobs.some(jobHolder => jobHolder.job === value)){
+        console.log('job already defined');
+      }else{
+        myConfig.addJob(value); 
+        myWorkflow.addJob(value);
+      }
     }
     //...
    }
