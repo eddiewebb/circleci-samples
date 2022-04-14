@@ -113,7 +113,7 @@ function addSubWorkflowForDocs(mappings){
  
   const subworkflow = new CircleCI.Workflow('subworkflow');
   subworkflow.addJob(defaultJob);
-  subworkflow.addJob(dependentJob,{requires:defaultJob.name});
+  subworkflow.addJob(dependentJob,{requires:[defaultJob.name]});
   mappings['docs/*']=subworkflow;
 }
 
