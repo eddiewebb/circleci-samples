@@ -1,17 +1,15 @@
-
-   
 {
-    "name": "Monorepo with E2E Testing",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-      "@circleci/circleci-config-sdk": "^1.0.0"
-    }
+  "name": "Monorepoe2e",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@circleci/circleci-config-sdk": "0.4.0"
   }
+}
