@@ -13,6 +13,10 @@ jobs:
       - node/install-packages:
           app-dir: .circleci/dynamic
       - run:
+          name: git changed paths
+          command: |
+            bash .circleci/dynamic/gitpath.bash
+      - run:
           name: Generate config
           command: node .circleci/dynamic/index.js
       - continuation/continue:
