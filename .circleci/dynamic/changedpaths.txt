@@ -4,3 +4,4 @@
 .circleci/dynamic/package-lock.json
 .circleci/dynamic/package.json
 .gitignore
+docs/paz

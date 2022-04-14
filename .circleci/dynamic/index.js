@@ -3,12 +3,22 @@ const CircleCI = require("@circleci/circleci-config-sdk");
 const fs = require('fs');
 const lineReader = require('line-reader');
 
+/*
+
+[ module-a-job-1 ]---[ module-a-job-b ]-------\
+[ module-b-only-job ]--------------------------`-----[ non-module-job-1]
+
+
+*/
+
+
+
 
 // Instantiate new Config
 const myConfig = new CircleCI.Config();
-// Create new Workflow
-const myWorkflow = new CircleCI.Workflow('myWorkflow');
-myConfig.addWorkflow(myWorkflow);
+// Create new Workflow that we'll pull jobs from 'sub-workflows', i.e. module-a
+const theWorkflow = new CircleCI.Workflow('theWorkflow');
+myConfig.addWorkflow(theWorkflow);
 
 // Create an executor instance
 // Executors are used directly in jobs
@@ -18,35 +28,28 @@ const nodeExecutor = new CircleCI.executor.DockerExecutor('cimg/node:lts');
 /* we'll try to asseble from sub-durectories, but can also define here
 */
 mappings = {}
-const defaultJob = new CircleCI.Job(`default`, nodeExecutor);
-// Add steps to job
-defaultJob
-.addStep(new CircleCI.commands.Checkout())
-.addStep(
-  new CircleCI.commands.Run({
-    command: `echo defauklt job`,
-    name: `Default Job`,
-  }),
-)
-mappings['.circleci/*']=defaultJob;
+addSubWorkflowForConfigJobs(mappings);
+addSubWorkflowForDocs(mappings)
 
+// track workflows added to avoid duplication
+addedWorkflows = []
 
 let entries = Object.entries(mappings);
-function ammendWorkflowFor(workflow, path){
+function ammendWorkflowFor( path){
   //1 can we find a circle config for it
   //2 does a job exist in map
-  for(let [index, [key, value]] of entries.entries()){
-    console.log(`COnsidering ${path} against ${key}`);
-    const pathRegEx = RegExp(key);
+  for(let [index, [pathspec, subworkflow]] of entries.entries()){
+    console.log(`COnsidering ${path} against ${pathspec}`);
+    const pathRegEx = RegExp(pathspec);
     if(pathRegEx.test(path)){
       console.log("Matching job found in JS mappings");
       //console.log(value)
       //console.log(myWorkflow.jobs)
-      if(myWorkflow.jobs.some(jobHolder => jobHolder.job === value)){
-        console.log('job already defined');
+      if(addedWorkflows.includes(subworkflow)){
+        console.log(`Subworkflow for ${pathspec} already captured`);
       }else{
-        myConfig.addJob(value); 
-        myWorkflow.addJob(value);
+        addedWorkflows.push(subworkflow);
+        harvestConfigFromWorkflow(subworkflow)
       }
     }
     //...
@@ -57,14 +60,77 @@ function ammendWorkflowFor(workflow, path){
 
 
 lineReader.eachLine('.circleci/dynamic/changedpaths.txt', function(line, last) {
-  console.log(`Line from file: ${line}`);
-
-
-  ammendWorkflowFor(myWorkflow,line);
-
+  ammendWorkflowFor(line);
 
   if(last) {
-    console.log('All paths considered, generating config.');
+    generateYaml();
+  }
+});
+
+
+function addSubWorkflowForConfigJobs(mappings){
+
+  const defaultJob = new CircleCI.Job(`default`, nodeExecutor);
+  // Add steps to job
+  defaultJob
+  .addStep(new CircleCI.commands.Checkout())
+  .addStep(
+    new CircleCI.commands.Run({
+      command: `echo defauklt job`,
+      name: `Default Job`,
+    }),
+  )
+
+ 
+  const subworkflow = new CircleCI.Workflow('subworkflow');
+  subworkflow.addJob(defaultJob);
+  mappings['.circleci/*']=subworkflow;
+}
+
+function addSubWorkflowForDocs(mappings){
+
+  const defaultJob = new CircleCI.Job(`docs-build`, nodeExecutor);
+  // Add steps to job
+  defaultJob
+  .addStep(new CircleCI.commands.Checkout())
+  .addStep(
+    new CircleCI.commands.Run({
+      command: `echo defauklt job`,
+      name: `Docs Step`,
+    }),
+  );
+
+  const dependentJob = new CircleCI.Job(`docs-test`, nodeExecutor);
+  dependentJob
+  .addStep(new CircleCI.commands.Checkout())
+  .addStep(
+    new CircleCI.commands.Run({
+      command: `echo defauklt job`,
+      name: `Docs Step`,
+    }),
+  )
+
+ 
+  const subworkflow = new CircleCI.Workflow('subworkflow');
+  subworkflow.addJob(defaultJob);
+  subworkflow.addJob(dependentJob,{requires:defaultJob.name});
+  mappings['docs/*']=subworkflow;
+}
+
+function harvestConfigFromWorkflow(subWorkflow){
+  //worklfows only contian jobs, loop
+  subWorkflow.jobs.forEach(jobHolder => {
+    console.log(jobHolder)
+    myConfig.addJob(jobHolder.job);
+    theWorkflow.addJob(jobHolder.job,jobHolder.parameters);
+  });
+}
+
+
+
+
+function generateYaml(){
+  console.log('All paths considered, generating config.');
     // The `stringify()` function on `CircleCI.Config` will return the CircleCI YAML equivalent.
     const MyYamlConfig = myConfig.stringify();
     fs.writeFile('./dynamicConfig.yml', MyYamlConfig, (err) => {
@@ -75,11 +141,4 @@ lineReader.eachLine('.circleci/dynamic/changedpaths.txt', function(line, last) {
     })
     const used = process.memoryUsage().heapUsed / 1024 / 1024;
     console.log(`The script uses approximately ${Math.round(used * 100) / 100} MB`);
-  }
-});
-
-
-
-
-
-
+}
