@@ -1,7 +1,0 @@
-.circleci/config.yml
-.circleci/dynamic/gitpaths.bash
-.circleci/dynamic/index.js
-.circleci/dynamic/package-lock.json
-.circleci/dynamic/package.json
-.gitignore
-docs/paz
