@@ -6,4 +6,4 @@ setup: true #Important: enable dynamic workflows in project settings.
 workflows:
   build_deploy:
     jobs: 
-      - monorepo/merge_configs
+      - monorepo/merge-configs
