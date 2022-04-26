@@ -7,4 +7,4 @@ workflows:
   build_deploy:
     jobs: 
       - monorepo/merge-configs:
-          base_revision: master
+          base-revision: master
