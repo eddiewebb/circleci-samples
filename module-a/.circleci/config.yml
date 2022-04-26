@@ -1,0 +1,20 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+
+jobs:
+  build:
+    executor: node/default
+    steps:
+      - run: echo "beep"
+  test:
+    executor: node/default
+    steps:
+      - run: echo "beep"
+workflows:
+  workflow:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build                                                                                                                                                                                         
