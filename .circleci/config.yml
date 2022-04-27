@@ -8,3 +8,4 @@ workflows:
     jobs: 
       - monorepo/merge-configs:
           base-revision: master
+          log-level: DEBUG

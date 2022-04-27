@@ -7,7 +7,21 @@ jobs:
     executor: node/default
     steps:
       - run: echo "boop"
+  publish-lambda:
+    executor: node/default
+    steps:
+      - run: echo "boop"
+  publish-docker:
+    executor: node/default
+    steps:
+      - run: echo "boop"
 workflows:
   finally-workflow:
     jobs:
-      - e2e-tests                                                                                                                                                                                    
+      - e2e-tests  
+      - publish-lambda:
+          requires:
+            - e2e-tests        
+      - publish-docker:
+          requires:
+            - e2e-tests                                                                                                                                                                                    

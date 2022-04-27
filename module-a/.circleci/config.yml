@@ -11,10 +11,16 @@ jobs:
     executor: node/default
     steps:
       - run: echo "beep"
+  lint:
+    executor: node/default
+    steps:
+      - run: echo "beep"
 workflows:
   workflow:
     jobs:
       - build
+      - lint
       - test:
           requires:
-            - build                                                                                                                                                                                         
+            - build  
+            - lint                                                                                                                                                                                       
