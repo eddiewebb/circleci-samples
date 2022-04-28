@@ -21,4 +21,4 @@ workflows:
       - test:
           name: My Test
           requires:
-            - build                                                                                                                                                                                         
+            - My Build                                                                                                                                                                                         
