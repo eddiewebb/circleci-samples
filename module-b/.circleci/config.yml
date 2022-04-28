@@ -12,10 +12,13 @@ jobs:
     executor: node/default
     steps:
       - run: echo "boop"
+
 workflows:
   workflow:
     jobs:
-      - build
+      - build:
+          name: My Build
       - test:
+          name: My Test
           requires:
             - build                                                                                                                                                                                         
