@@ -1,0 +1,43 @@
+version: 2.1
+orbs:
+  node: circleci/node@4.7.0
+
+
+
+parameters:
+  module-a:
+    default: ""
+    type: string
+    description: This exists only to hack the absence of conditional jobs.
+
+jobs:
+  build:
+    executor: node/default
+    steps:
+      - run: echo "beep"
+  test:
+    executor: node/default
+    steps:
+      - run: echo "beep"
+  lint:
+    executor: node/default
+    steps:
+      - run: echo "beep"
+    parameters:
+      is_conditional:
+        default: ""
+        type: string
+        description: This exists only to hack the absence of conditional jobs.
+workflows:
+  workflow:
+    jobs:
+      - build:
+          name: My Build
+      - lint:
+          matrix:
+            parameters: 
+              is_conditional: [ << pipeline.parameters.module-a >>]
+      - test:
+          name: My Test
+          requires:
+            - My Build                                                                                                                                                                                       
