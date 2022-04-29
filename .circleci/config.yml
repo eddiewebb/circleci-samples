@@ -11,4 +11,4 @@ workflows:
           config-path: .circleci/continue-config.yml
           mapping: |
             module-a/.* module-a "bop"
-            module-b/.* module-b "bop"
+            docs/.* module-b "bop"
