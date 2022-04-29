@@ -9,6 +9,10 @@ parameters:
     default: ""
     type: string
     description: This exists only to hack the absence of conditional jobs.
+  module-b:
+    default: ""
+    type: string
+    description: This exists only to hack the absence of conditional jobs.
 
 jobs:
   build:
@@ -28,6 +32,7 @@ jobs:
         default: ""
         type: string
         description: This exists only to hack the absence of conditional jobs.
+
 workflows:
   workflow:
     jobs:
