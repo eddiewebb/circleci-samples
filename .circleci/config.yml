@@ -10,5 +10,5 @@ workflows:
           base-revision: master
           config-path: .circleci/continue-config.yml
           mapping: |
-            module-a/.* module-a true 
-            module-b/.* module-b true 
+            module-a/.* module-a 'baz' 
+            module-b/.* module-b 'boop' 
