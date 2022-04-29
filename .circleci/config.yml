@@ -10,5 +10,5 @@ workflows:
           base-revision: master
           config-path: .circleci/continue-config.yml
           mapping: |
-            module-a/.* module-a {"bop"}
-            module-b/.* module-b {"bop"} 
+            module-a/.* module-a "bop"
+            module-b/.* module-b "bop"
