@@ -6,11 +6,11 @@ orbs:
 
 parameters:
   module-a:
-    default: 
+    default: ""
     type: string
     description: This exists only to hack the absence of conditional jobs.
   module-b:
-    default: 
+    default: ""
     type: string
     description: This exists only to hack the absence of conditional jobs.
 
