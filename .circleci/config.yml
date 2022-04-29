@@ -6,6 +6,9 @@ setup: true #Important: enable dynamic workflows in project settings.
 workflows:
   build_deploy:
     jobs: 
-      - monorepo/merge-configs:
+      - path-filtering/filter:
           base-revision: master
-          log-level: DEBUG
+          config-path: .circleci/continue-config.yml
+          mapping: |
+            module-a/.* module-a exists
+            module-b/.* module-b exists
