@@ -41,7 +41,7 @@ workflows:
       - lint:
           matrix:
             parameters: 
-              is_conditional: [ << pipeline.parameters.module-b >>]
+              is_conditional: [<<pipeline.parameters.module-b>>]
       - test:
           name: My Test
           requires:
