@@ -38,10 +38,7 @@ version: 2.1
 workflows:
   the-workflow:
     jobs:
-    - module-a-build:
-        filters: &id001
-          branches:
-            only: [___THIS_JOB_FILTERED_BY_MONO_ORB___]
+    - module-a-build: {}
     - module-a-test:
         requires: [module-a-build]
     - module-b-build: {}
@@ -50,8 +47,6 @@ workflows:
     - e2e-tests:
         requires: [module-a-test, module-b-test]
     - module-a-publish:
-        filters: *id001
         requires: [e2e-tests, module-a-test]
     - module-b-publish:
         requires: [e2e-tests, module-b-test]
-
