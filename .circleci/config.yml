@@ -1,14 +1,58 @@
+jobs:
+  e2e-tests:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-build:
+    executor: node/default
+    parameters:
+      is_conditional: {default: '', description: This exists only to hack the absence
+          of conditional jobs., type: string}
+    steps:
+    - {run: echo "beep"}
+  module-a-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-test:
+    executor: node/default
+    steps:
+    - {run: echo "beep"}
+  module-b-build:
+    executor: node/default
+    parameters:
+      is_conditional: {default: '', description: This exists only to hack the absence
+          of conditional jobs., type: string}
+    steps:
+    - {run: echo "boop"}
+  module-b-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-b-test:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+orbs: {node: circleci/node@4.7.0}
 version: 2.1
-orbs:
-  monorepo: eddiewebb/monorepo@dev:alpha #we suggest you lock a specific revision
-  path-filtering: circleci/path-filtering@0.1.2
-setup: true #Important: enable dynamic workflows in project settings.
 workflows:
-  build_deploy:
-    jobs: 
-      - path-filtering/filter:
-          base-revision: master
-          config-path: .circleci/continue-config.yml
-          mapping: |
-            module-a/.* module-a "bop"
-            neverexisted/.* module-b "foo"
+  the-workflow:
+    jobs:
+    - module-a-build:
+        filters:
+          branches:
+            only: [___THIS_JOB_FILTERED_BY_MONO_ORB___]
+        matrix:
+          parameters:
+            is_conditional: [when-docs-True]
+    - module-a-test:
+        requires: [module-a-build]
+    - module-b-build: {}
+    - module-b-test:
+        requires: [module-b-build]
+    - e2e-tests:
+        requires: [module-a-test, module-b-test]
+    - module-a-publish:
+        requires: [e2e-tests, module-a-test]
+    - module-b-publish:
+        requires: [e2e-tests, module-b-test]
