@@ -1,48 +1,81 @@
-version: 2.1
-orbs:
+orbs: 
   node: circleci/node@4.7.0
-
-
-
-parameters:
-  module-a:
-    default: ""
-    type: string
-    description: This exists only to hack the absence of conditional jobs.
-  module-b:
-    default: ""
-    type: string
-    description: This exists only to hack the absence of conditional jobs.
+version: 2.1
 
 jobs:
-  build:
+  module-a-build:
     executor: node/default
     steps:
-      - run: echo "beep"
-  test:
-    executor: node/default
-    steps:
-      - run: echo "beep"
-  lint:
-    executor: node/default
-    steps:
-      - run: echo "beep"
+    - {run: echo "beep"}
     parameters:
       is_conditional:
         default: ""
         type: string
         description: This exists only to hack the absence of conditional jobs.
 
+  module-b-build:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+    parameters:
+      is_conditional:
+        default: ""
+        type: string
+        description: This exists only to hack the absence of conditional jobs.
+  module-b-test:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-test:
+    executor: node/default
+    steps:
+    - {run: echo "beep"}
+  e2e-tests:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+    parameters:
+      is_conditional:
+        default: ""
+        type: string
+        description: This exists only to hack the absence of conditional jobs.
+  module-b-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+    parameters:
+      is_conditional:
+        default: ""
+        type: string
+        description: This exists only to hack the absence of conditional jobs.
 workflows:
-  workflow:
+  the-workflow:
     jobs:
-      - build:
-          name: My Build
-      - lint:
-          matrix:
-            parameters: 
-              is_conditional: [<<pipeline.parameters.module-b>>]
-      - test:
-          name: My Test
-          requires:
-            - My Build                                                                                                                                                                                       
+    - module-a-build:
+        matrix:
+          parameters: 
+            is_conditional: [ when-docs-True ]  #"docs" is the mapped parameter value, True (boolean) is value.
+    - module-a-test:
+        requires: [module-a-build]
+    - module-b-build:
+        matrix:
+          parameters: 
+            is_conditional: [ when-app-True ]  #"app" is the mapped parameter value, True (boolean) is value.
+    - module-b-test:
+        requires: [module-b-build] #becasue a single requiremtn can be simple
+    - e2e-tests:
+        requires: [module-a-test, module-b-test]  # e2e will run as long as one of these remains
+    - module-a-publish:
+        requires: [e2e-tests, module-a-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
+        matrix:
+          parameters: 
+            is_conditional: [ when-docs-True ]  
+    - module-b-publish:
+        requires: [e2e-tests, module-b-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
+        matrix:
+          parameters: 
+            is_conditional: [ when-app-True ] 
