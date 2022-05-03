@@ -14,7 +14,7 @@ workflows:
             module-c/.* include-app true
           log-level: DEBUG
       - path-filtering/filter:
-          base-revision: main
+          base-revision: master
           config-path: .circleci/continue-config2.yml
           mapping: |
             module-a/.* include-module-a "<<pipeline.git.branch>>"
