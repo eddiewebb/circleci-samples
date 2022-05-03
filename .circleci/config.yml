@@ -10,5 +10,5 @@ workflows:
           base-revision: master
           mapping: |
             module-a/.* include-docs true
-            module-b/.* include-apps true
+            module-b/.* include-app true
           log-level: DEBUG
