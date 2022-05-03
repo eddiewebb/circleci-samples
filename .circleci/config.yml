@@ -1,10 +1,11 @@
 version: 2.1
 orbs:
   monorepo: eddiewebb/monorepo@dev:105 #we suggest you lock a specific revision
+  path-filtering: circleci/path-filtering@0.1.2
 
 setup: true #Important: enable dynamic workflows in project settings.
 workflows:
-  build_deploy:
+  matrix_hack:
     jobs: 
       - monorepo/purge-jobs:
           base-revision: master
@@ -12,3 +13,12 @@ workflows:
             module-a/.* include-docs true
             module-c/.* include-app true
           log-level: DEBUG
+  branch_hack:
+    jobs: 
+  jobs:
+        - path-filtering/filter:
+            base-revision: main
+            config-path: .circleci/continue-config2.yml
+            mapping: |
+            module-a/.* include-module-a "<<pipeline.git.branch>>"
+            module-c/.* include-module-a "<<pipeline.git.branch>>"
