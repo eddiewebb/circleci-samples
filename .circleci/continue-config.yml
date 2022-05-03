@@ -58,13 +58,13 @@ workflows:
     - module-a-build:
         matrix:
           parameters: 
-            is_conditional: [ when-include-docs-True ]  #"docs" is the mapped parameter value, True (boolean) is value.
+            is_conditional: [ when-include-docs-true ]  #"docs" is the mapped parameter value, true (boolean) is value.
     - module-a-test:
         requires: [module-a-build]
     - module-b-build:
         matrix:
           parameters: 
-            is_conditional: [ when-include-app-True ]  #"app" is the mapped parameter value, True (boolean) is value.
+            is_conditional: [ when-include-app-true ]  #"app" is the mapped parameter value, true (boolean) is value.
     - module-b-test:
         requires: [module-b-build] #becasue a single requiremtn can be simple
     - e2e-tests:
@@ -73,9 +73,9 @@ workflows:
         requires: [e2e-tests, module-a-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
         matrix:
           parameters: 
-            is_conditional: [ when-include-docs-True ]  
+            is_conditional: [ when-include-docs-true ]  
     - module-b-publish:
         requires: [e2e-tests, module-b-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
         matrix:
           parameters: 
-            is_conditional: [ when-include-app-True ] 
+            is_conditional: [ when-include-app-true ] 
