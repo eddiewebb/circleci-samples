@@ -1,0 +1,72 @@
+orbs: 
+  node: circleci/node@4.7.0
+version: 2.1
+
+
+parameters:
+  include-module-a:
+    default: "LONGANDIMPOSSIBLETOMATCHBRANCHNAME"
+    type: string
+    description: This exists only to hack the absence of conditional jobs.
+  include-module-b:
+    default: "LONGANDIMPOSSIBLETOMATCHBRANCHNAME"
+    type: string
+    description: This exists only to hack the absence of conditional jobs.
+
+jobs:
+  module-a-build:
+    executor: node/default
+    steps:
+    - {run: echo "beep"}
+
+  module-b-build:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-b-test:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-test:
+    executor: node/default
+    steps:
+    - {run: echo "beep"}
+  e2e-tests:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-a-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+  module-b-publish:
+    executor: node/default
+    steps:
+    - {run: echo "boop"}
+workflows:
+  the-workflow:
+    jobs:
+    - module-a-build:
+        filters:
+          branches:
+            only: [<<pipeline.parameters.include-module-a>>] #"docs" is the mapped parameter value, true (boolean) is value.
+    - module-a-test:
+        requires: [module-a-build]
+    - module-b-build:
+        filters:
+          branches:
+            only: [<<pipeline.parameters.include-module-b>>]  #"app" is the mapped parameter value, true (boolean) is value.
+    - module-b-test:
+        requires: [module-b-build] #becasue a single requiremtn can be simple
+    - e2e-tests:
+        requires: [module-a-test, module-b-test]  # e2e will run as long as one of these remains
+    - module-a-publish:
+        requires: [e2e-tests, module-a-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
+        filters:
+          branches:
+            only: [<<pipeline.parameters.include-module-a>>] 
+    - module-b-publish:
+        requires: [e2e-tests, module-b-test] #because e2e will remain, we need to re-declare it's dynamic aspect.
+        filters:
+          branches:
+            only: [<<pipeline.parameters.include-module-b>>] 
