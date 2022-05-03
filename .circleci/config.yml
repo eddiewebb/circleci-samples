@@ -7,15 +7,15 @@ setup: true #Important: enable dynamic workflows in project settings.
 workflows:
   matrix_hack:
     jobs: 
-      - monorepo/purge-jobs:
-          base-revision: master
-          mapping: |
-            module-a/.* include-docs true
-            module-c/.* include-app true
-          log-level: DEBUG
+      #- monorepo/purge-jobs:
+      #    base-revision: master
+      #    mapping: |
+      #      module-a/.* include-docs true
+      #      module-c/.* include-app true
+      #    log-level: DEBUG
       - path-filtering/filter:
           base-revision: master
           config-path: .circleci/continue-config2.yml
           mapping: |
             module-a/.* include-module-a "<<pipeline.git.branch>>"
-            module-c/.* include-module-a "<<pipeline.git.branch>>"
+            module-b/.* include-module-a "<<pipeline.git.branch>>"
