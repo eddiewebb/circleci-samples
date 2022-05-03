@@ -15,7 +15,6 @@ workflows:
           log-level: DEBUG
   branch_hack:
     jobs: 
-  jobs:
         - path-filtering/filter:
             base-revision: main
             config-path: .circleci/continue-config2.yml
