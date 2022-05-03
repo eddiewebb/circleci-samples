@@ -19,5 +19,5 @@ workflows:
             base-revision: main
             config-path: .circleci/continue-config2.yml
             mapping: |
-            module-a/.* include-module-a "<<pipeline.git.branch>>"
-            module-c/.* include-module-a "<<pipeline.git.branch>>"
+              module-a/.* include-module-a "<<pipeline.git.branch>>"
+              module-c/.* include-module-a "<<pipeline.git.branch>>"
