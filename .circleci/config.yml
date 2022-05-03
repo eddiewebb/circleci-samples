@@ -13,11 +13,9 @@ workflows:
             module-a/.* include-docs true
             module-c/.* include-app true
           log-level: DEBUG
-  branch_hack:
-    jobs: 
-        - path-filtering/filter:
-            base-revision: main
-            config-path: .circleci/continue-config2.yml
-            mapping: |
-              module-a/.* include-module-a "<<pipeline.git.branch>>"
-              module-c/.* include-module-a "<<pipeline.git.branch>>"
+      - path-filtering/filter:
+          base-revision: main
+          config-path: .circleci/continue-config2.yml
+          mapping: |
+            module-a/.* include-module-a "<<pipeline.git.branch>>"
+            module-c/.* include-module-a "<<pipeline.git.branch>>"
