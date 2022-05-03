@@ -1,65 +1,13 @@
-jobs:
-  e2e-tests:
-    executor: node/default
-    steps:
-    - {run: echo "boop"}
-  module-a-build:
-    executor: node/default
-    parameters:
-      is_conditional: {default: '', description: This exists only to hack the absence
-          of conditional jobs., type: string}
-    steps:
-    - {run: echo "beep"}
-  module-a-publish:
-    executor: node/default
-    parameters:
-      is_conditional: {default: '', description: This exists only to hack the absence
-          of conditional jobs., type: string}
-    steps:
-    - {run: echo "boop"}
-  module-a-test:
-    executor: node/default
-    steps:
-    - {run: echo "beep"}
-  module-b-build:
-    executor: node/default
-    parameters:
-      is_conditional: {default: '', description: This exists only to hack the absence
-          of conditional jobs., type: string}
-    steps:
-    - {run: echo "boop"}
-  module-b-publish:
-    executor: node/default
-    parameters:
-      is_conditional: {default: '', description: This exists only to hack the absence
-          of conditional jobs., type: string}
-    steps:
-    - {run: echo "boop"}
-  module-b-test:
-    executor: node/default
-    steps:
-    - {run: echo "boop"}
-orbs: {node: circleci/node@4.7.0}
 version: 2.1
-workflows:
-  the-workflow:
-    jobs:
-    - module-a-build:
-        filters: &id001
-          branches:
-            only: [___THIS_JOB_FILTERED_BY_MONO_ORB___]
-    - module-a-test:
-        requires: [module-a-build]
-    - module-b-build:
-        filters: *id001
-    - module-b-test:
-        requires: [module-b-build]
-    - e2e-tests:
-        requires: [module-a-test, module-b-test]
-    - module-a-publish:
-        filters: *id001
-        requires: [e2e-tests, module-a-test]
-    - module-b-publish:
-        filters: *id001
-        requires: [e2e-tests, module-b-test]
+orbs:
+  monorepo: eddiewebb/monorepo@dev:101 #we suggest you lock a specific revision
 
+setup: true #Important: enable dynamic workflows in project settings.
+workflows:
+  build_deploy:
+    jobs: 
+      - monorepo/purge-jobs:
+          base-revision: master
+          mapping: |
+            module-a/.* docs true
+            module-b/.* apps true
