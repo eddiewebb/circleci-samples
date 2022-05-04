@@ -18,10 +18,8 @@ jobs:
 workflows:
   workflow:
     jobs:
-      - build:
-          name: My Build
+      - build
       - lint
       - test:
-          name: My Test
           requires:
-            - My Build                                                                                                                                                                                       
+            - build                                                                                                                                                                                       

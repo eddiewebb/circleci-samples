@@ -16,9 +16,7 @@ jobs:
 workflows:
   workflow:
     jobs:
-      - build:
-          name: My Build
+      - build
       - test:
-          name: My Test
           requires:
-            - My Build                                                                                                                                                                                         
+            - build                                                                                                                                                                                        
