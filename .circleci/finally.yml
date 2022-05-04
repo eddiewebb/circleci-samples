@@ -7,11 +7,11 @@ jobs:
     executor: node/default
     steps:
       - run: echo "boop"
-  publish-lambda:
+  publish-module-a:
     executor: node/default
     steps:
       - run: echo "boop"
-  publish-docker:
+  publish-module-b:
     executor: node/default
     steps:
       - run: echo "boop"
