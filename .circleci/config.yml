@@ -12,4 +12,4 @@ workflows:
           config-path: .circleci/continue-config.yml
           mapping: |
             module-a/.* include-module-a "<<pipeline.git.branch>>"
-            module-b/.* include-module-b "<<pipeline.git.branch>>"
+            module-c/.* include-module-b "<<pipeline.git.branch>>"
