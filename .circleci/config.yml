@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  monorepo: eddiewebb/monorepo@dev:alpha #we suggest you lock a specific revision
+  monorepo: eddiewebb/monorepo@dev:105 #we suggest you lock a specific revision
 
 setup: true #Important: enable dynamic workflows in project settings.
 workflows:
