@@ -19,9 +19,9 @@ workflows:
   finally-workflow:
     jobs:
       - e2e-tests  
-      - publish-lambda:
+      - publish-module-a:
           requires:
             - e2e-tests        
-      - publish-docker:
+      - publish-module-b:
           requires:
             - e2e-tests                                                                                                                                                                                    
