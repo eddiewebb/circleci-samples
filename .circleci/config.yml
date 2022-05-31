@@ -9,9 +9,13 @@ jobs:
   keep-going:
     executor: default
     resource_class: small
+    parallelism: 4
     steps:
-      - checkout
-      - run: bash rickroll.sh
+      - run: sleep $[ ( $RANDOM % 20 )  + 1 ]s
+      
+
+
+
 
   
 workflows:
