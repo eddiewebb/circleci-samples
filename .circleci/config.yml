@@ -18,7 +18,8 @@ jobs:
           else
             sleep 30
           fi
-      - deploy: 
+      - run: 
+          when: always
           name: Approve pending Gradle Upload
           command: |
             if [ $CIRCLE_NODE_INDEX -eq 0 ];then
