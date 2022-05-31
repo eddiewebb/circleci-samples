@@ -17,6 +17,7 @@ jobs:
             sleep $[ ( $RANDOM % 20 )  + 1 ]s
           fi
       - deploy: 
+          name: Approve pending Gradle Upload
           command: |
             if [ $CIRCLE_NODE_INDEX -eq 0 ];then
               echo "Call approval"
