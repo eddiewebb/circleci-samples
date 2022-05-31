@@ -14,6 +14,8 @@ jobs:
       - run: |
           echo $CIRCLE_NODE_INDEX
           if [ $CIRCLE_NODE_INDEX -gt 0 ];then
+            sleep 10
+          else
             sleep 30
           fi
       - deploy: 
