@@ -17,7 +17,7 @@ jobs:
             sleep 20
           fi
       - run: 
-          when: always
+          when: on_fail
           name: Approve pending Gradle Upload
           command: |
             if [ $CIRCLE_NODE_INDEX -eq 0 ];then
