@@ -14,7 +14,7 @@ jobs:
       - run: |
           echo $CIRCLE_NODE_INDEX
           if [ $CIRCLE_NODE_INDEX -gt 0 ];then
-            sleep $[ ( $RANDOM % 20 )  + 1 ]s
+            sleep 30
           fi
       - deploy: 
           name: Approve pending Gradle Upload
