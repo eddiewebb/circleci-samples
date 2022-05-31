@@ -16,10 +16,11 @@ jobs:
           if [ $CIRCLE_NODE_INDEX -gt 0 ];then
             sleep $[ ( $RANDOM % 20 )  + 1 ]s
           fi
-      - deploy: |
-          if [ $CIRCLE_NODE_INDEX -eq 0 ];then
-            echo "Call approval"
-          fi
+      - deploy: 
+          command: |
+            if [ $CIRCLE_NODE_INDEX -eq 0 ];then
+              echo "Call approval"
+            fi
     
 
 
