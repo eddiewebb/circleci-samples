@@ -13,16 +13,28 @@ jobs:
     steps:
       - run: |
           echo $CIRCLE_NODE_INDEX
-          if [ $CIRCLE_NODE_INDEX -gt 0 ];then
-            sleep 20
-          fi
+      - checkout
+
       - run: 
-          when: on_fail
-          name: Approve pending Gradle Upload
+          name: cat list
           command: |
-            if [ $CIRCLE_NODE_INDEX -eq 0 ];then
-              echo "Call approval"
-            fi
+            cat list
+
+      - run: 
+          name: split list with system provided total
+          command: |
+            cat list | circleci tests split
+
+      - run: 
+          name: split list with USER provided total of 2
+          command: |
+            cat list | circleci tests split --total=2
+
+      - run: 
+          name: split list with USER provided total of 1
+          command: |
+            cat list | circleci tests split --total=1
+
     
 
 
