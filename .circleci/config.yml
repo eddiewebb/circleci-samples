@@ -8,8 +8,7 @@ workflows:
 jobs:
   build:
     docker:
-      images: 
-        - cimg/base:stable
+      - image: cimg/base:stable
     steps:
       - checkout
       - run: 
