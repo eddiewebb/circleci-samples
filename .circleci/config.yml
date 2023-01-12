@@ -1,49 +1,19 @@
 version: 2.1
 
-executors:
+workflows:
   default:
-    docker:
-      - image: cimg/node:14.18.2
+    jobs:
+      - build
 
 jobs:
-  keep-going:
-    executor: default
-    resource_class: small
-    parallelism: 4
+  build:
+    docker:
+      images: 
+        - cimg/base:stable
     steps:
-      - run: |
-          echo $CIRCLE_NODE_INDEX
       - checkout
-
       - run: 
-          name: cat list
+          name: Hello World
           command: |
-            cat list
-
-      - run: 
-          name: split list with system provided total
-          command: |
-            cat list | circleci tests split
-
-      - run: 
-          name: split list with USER provided total of 2
-          command: |
-            cat list | circleci tests split --total=2
-
-      - run: 
-          name: split list with USER provided total of 1
-          command: |
-            cat list | circleci tests split --total=1
-
-    
-
-
-
-
-
-  
-workflows:
-  version: 2
-  test-deploy:
-    jobs:
-      - keep-going
+            echo "Hello World"
+            echo "and again"
