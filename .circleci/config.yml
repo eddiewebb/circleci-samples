@@ -3,37 +3,17 @@ version: 2.1
 executors:
   default:
     docker:
-      - image: cimg/node:14.18.2
+      - image: cimg/base:stable
 
 jobs:
-  keep-going:
+  qrcode:
     executor: default
     resource_class: small
     parallelism: 4
     steps:
       - run: |
-          echo $CIRCLE_NODE_INDEX
-      - checkout
-
-      - run: 
-          name: cat list
-          command: |
-            cat list
-
-      - run: 
-          name: split list with system provided total
-          command: |
-            cat list | circleci tests split
-
-      - run: 
-          name: split list with USER provided total of 2
-          command: |
-            cat list | circleci tests split --total=2
-
-      - run: 
-          name: split list with USER provided total of 1
-          command: |
-            cat list | circleci tests split --total=1
+          sudo apt install qrencode
+          qrencode -t ANSI 'https://superuser.com/questions/1420001/is-it-possible-to-write-a-qr-code'
 
     
 
@@ -43,7 +23,6 @@ jobs:
 
   
 workflows:
-  version: 2
   test-deploy:
     jobs:
-      - keep-going
+      - qrcode
