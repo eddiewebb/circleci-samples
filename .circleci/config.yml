@@ -9,32 +9,14 @@ jobs:
   keep-going:
     executor: default
     resource_class: small
-    parallelism: 4
+    parallelism: 1
     steps:
       - run: |
-          echo $CIRCLE_NODE_INDEX
-      - checkout
+          echo '<html><head><meta http-equiv="refresh" content="0; url=https://google.com"></head></html>' > redirect.html
 
-      - run: 
-          name: cat list
-          command: |
-            cat list
-
-      - run: 
-          name: split list with system provided total
-          command: |
-            cat list | circleci tests split
-
-      - run: 
-          name: split list with USER provided total of 2
-          command: |
-            cat list | circleci tests split --total=2
-
-      - run: 
-          name: split list with USER provided total of 1
-          command: |
-            cat list | circleci tests split --total=1
-
+      - store_artifacts:
+          path: redirect.html
+          destination: google.com
     
 
 
