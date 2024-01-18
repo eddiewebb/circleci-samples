@@ -29,3 +29,7 @@ workflows:
   test-deploy:
     jobs:
       - keep-going
+  test-deploy:
+    when: false
+    jobs:
+      - keep-going
