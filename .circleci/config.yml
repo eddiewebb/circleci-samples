@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  queue: eddiewebb/queue@dev:3.8
+  queue: eddiewebb/queue@dev:3.9
+  
 
 executors:
   default:
