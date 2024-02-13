@@ -28,14 +28,9 @@ jobs:
 
   
 workflows:
-  version: 2
   test-deploy:
     jobs:
       - keep-going
       - queue/block_workflow:
           max-wait-time: "10"               
           limit-branch-name: main
-  test-deploy:
-    when: false
-    jobs:
-      - keep-going
