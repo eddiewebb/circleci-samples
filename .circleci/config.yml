@@ -34,4 +34,4 @@ workflows:
       - queue/block_workflow:
           my-pipeline: <<pipeline.number>>
           max-wait-time: "10"               
-          limit-branch-name: main
+          limit-branch-name: master
