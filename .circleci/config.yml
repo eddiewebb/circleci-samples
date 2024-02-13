@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  queue: eddiewebb/queue@dev:3.2
+  queue: eddiewebb/queue@dev:3.4
 
 executors:
   default:
@@ -32,5 +32,6 @@ workflows:
     jobs:
       - keep-going
       - queue/block_workflow:
+          my-pipeline: <<pipeline.number>>
           max-wait-time: "10"               
           limit-branch-name: main
