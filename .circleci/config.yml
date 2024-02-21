@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  queue: eddiewebb/queue@dev:503
+  queue: eddiewebb/queue@3.0.0
 
 
 executors:
@@ -9,19 +9,40 @@ executors:
     docker:
       - image: cimg/node:14.18.2
 
+  latest:
+    docker:
+      - image: cimg/base:stable
+
 jobs:
   keep-going:
-    executor: default
+    parameters:
+      executor:
+        type: executor
+        default: default
+    executor: <<parameters.executor>>
     resource_class: small
-    parallelism: 1
+    environment:
+          BLOCK_WORKFLOW: true
+          CCI_API_KEY_NAME: CIRCLECI_API_KEY
+          CIRCLECI_BASE_URL: https://circleci.com
+          CONFIDENCE_THRESHOLD: '1'
+          DEBUG: true
+          DONT_QUIT: false
+          FILTER_BRANCH: false
+          FORCE_CANCEL_PREVIOUS: false
+          JOB_REGEXP: ''
+          MAX_TIME: '10'
+          MY_BRANCH: $CIRCLE_BRANCH
+          MY_PIPELINE_NUMBER: 1
+          ONLY_ON_BRANCH: master
+          ONLY_ON_WORKFLOW: '*'
+          TAG_PATTERN: ''
     steps:
+      - run: set
       - run: |
-          echo '<html><head><meta http-equiv="refresh" content="0; url=https://google.com"></head></html>' > redirect.html
-          sleep 60
-      - store_artifacts:
-          path: redirect.html
-          destination: google.com
-    
+          if [ "${DEBUG}" == "true" ] ;then
+            echo "DEBUG"
+          fi
 
 
 
@@ -32,7 +53,18 @@ workflows:
   test-deploy:
     jobs:
       - keep-going
+      - keep-going:
+          executor: latest
       - queue/block_workflow:
           my-pipeline: <<pipeline.number>>
           max-wait-time: "10"               
           limit-branch-name: master
+          include-debug: true
+          this-branch-only: false
+          pre-steps:
+            - run: set
+            - run: |
+                if [ "${DEBUG}" == "true" ] ;then
+                  echo "DEBUG"
+                fi
+
