@@ -68,11 +68,31 @@ jobs:
             if [ "${DEBUG}" == "true" ] ;then
               echo "DEBUG"
             fi
+      - use_booleans
           
           
 
 
+commands:
+  use_booleans:
+    parameters:
+      default_false:
+        type: boolean
+        default: false
+      default_true:
+        type: boolean
+        default: true
 
+    steps:
+      - run: 
+          shell: bash
+          name: reused command
+          environment: 
+            DEBUG: <<parameters.default_true>>
+          command: |
+            if [ "${DEBUG}" == "true" ] ;then
+              echo "DEBUG"
+            fi
 
 
   
