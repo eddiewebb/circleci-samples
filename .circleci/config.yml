@@ -46,6 +46,30 @@ jobs:
           if [ "${DEBUG}" == "true" ] ;then
             echo "DEBUG"
           fi
+      - run:
+          name: command level vars
+          environment:
+            BLOCK_WORKFLOW: true
+            CCI_API_KEY_NAME: CIRCLECI_API_KEY
+            CIRCLECI_BASE_URL: https://circleci.com
+            CONFIDENCE_THRESHOLD: '1'
+            DEBUG: true
+            DONT_QUIT: false
+            FILTER_BRANCH: false
+            FORCE_CANCEL_PREVIOUS: false
+            JOB_REGEXP: ''
+            MAX_TIME: '10'
+            MY_BRANCH: $CIRCLE_BRANCH
+            MY_PIPELINE_NUMBER: 1
+            ONLY_ON_BRANCH: master
+            ONLY_ON_WORKFLOW: '*'
+            TAG_PATTERN: ''
+          command: |
+            if [ "${DEBUG}" == "true" ] ;then
+              echo "DEBUG"
+            fi
+          
+          
 
 
 
