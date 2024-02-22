@@ -58,6 +58,8 @@ workflows:
       - keep-going
       - keep-going:
           executor: latest
+      - keep-going:
+          executor: node
       - queue/block_workflow:
           my-pipeline: <<pipeline.number>>
           max-wait-time: "10"               
