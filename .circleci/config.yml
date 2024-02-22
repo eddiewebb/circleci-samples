@@ -65,6 +65,7 @@ jobs:
             ONLY_ON_WORKFLOW: '*'
             TAG_PATTERN: ''
           command: |
+            set
             if [ "${DEBUG}" == "true" ] ;then
               echo "DEBUG"
             fi
@@ -90,6 +91,7 @@ commands:
           environment: 
             DEBUG: <<parameters.default_true>>
           command: |
+            set
             if [ "${DEBUG}" == "true" ] ;then
               echo "DEBUG"
             fi
