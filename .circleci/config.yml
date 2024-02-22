@@ -53,7 +53,7 @@ jobs:
             CCI_API_KEY_NAME: CIRCLECI_API_KEY
             CIRCLECI_BASE_URL: https://circleci.com
             CONFIDENCE_THRESHOLD: '1'
-            DEBUG: true
+            DEBUG: 'true'
             DONT_QUIT: false
             FILTER_BRANCH: false
             FORCE_CANCEL_PREVIOUS: false
@@ -89,7 +89,7 @@ commands:
           shell: bash
           name: reused command
           environment: 
-            DEBUG: <<parameters.default_true>>
+            DEBUG: '<<parameters.default_true>>'
           command: |
             set
             if [ "${DEBUG}" == "true" ] ;then
