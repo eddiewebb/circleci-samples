@@ -89,7 +89,7 @@ commands:
           shell: bash
           name: reused command
           environment: 
-            DEBUG: '<<parameters.default_true>'
+            DEBUG: '<<parameters.default_true>>'
           command: |
             set
             if [ "${DEBUG}" == "true" ] ;then
