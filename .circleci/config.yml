@@ -8,6 +8,9 @@ executors:
   default:
     docker:
       - image: cimg/node:14.18.2
+  node:
+    docker:
+      - image: cimg/node:18.13
 
   latest:
     docker:
