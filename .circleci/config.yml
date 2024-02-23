@@ -85,11 +85,10 @@ commands:
         default: true
 
     steps:
+      - run: echo "export DEBUG=<<parameters.default_true>> >> $BASH_ENV"
       - run: 
           shell: bash
           name: reused command
-          environment: 
-            DEBUG: ${BOGUS:-<<parameters.default_true>>}
           command: |
             set
             if [ "${DEBUG}" == "true" ] ;then
