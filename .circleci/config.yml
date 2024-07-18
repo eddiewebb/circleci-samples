@@ -1,120 +1,32 @@
 version: 2.1
 
-orbs:
-  queue: eddiewebb/queue@3.0.0
 
 
 executors:
-  default:
-    docker:
-      - image: cimg/node:14.18.2
-  node:
-    docker:
-      - image: cimg/node:18.13
 
   latest:
     docker:
       - image: cimg/base:stable
 
 jobs:
-  keep-going:
-    parameters:
-      executor:
-        type: executor
-        default: default
-    executor: <<parameters.executor>>
+  only:
+    executor: latest
     resource_class: small
-    environment:
-          BLOCK_WORKFLOW: true
-          CCI_API_KEY_NAME: CIRCLECI_API_KEY
-          CIRCLECI_BASE_URL: https://circleci.com
-          CONFIDENCE_THRESHOLD: '1'
-          DEBUG: true
-          DONT_QUIT: false
-          FILTER_BRANCH: false
-          FORCE_CANCEL_PREVIOUS: false
-          JOB_REGEXP: ''
-          MAX_TIME: '10'
-          MY_BRANCH: $CIRCLE_BRANCH
-          MY_PIPELINE_NUMBER: 1
-          ONLY_ON_BRANCH: master
-          ONLY_ON_WORKFLOW: '*'
-          TAG_PATTERN: ''
     steps:
       - run: set
       - run: |
           if [ "${DEBUG}" == "true" ] ;then
             echo "DEBUG"
           fi
-      - run:
-          name: command level vars
-          environment:
-            BLOCK_WORKFLOW: true
-            CCI_API_KEY_NAME: CIRCLECI_API_KEY
-            CIRCLECI_BASE_URL: https://circleci.com
-            CONFIDENCE_THRESHOLD: '1'
-            DEBUG: 'true'
-            DONT_QUIT: false
-            FILTER_BRANCH: false
-            FORCE_CANCEL_PREVIOUS: false
-            JOB_REGEXP: ''
-            MAX_TIME: '10'
-            MY_BRANCH: $CIRCLE_BRANCH
-            MY_PIPELINE_NUMBER: 1
-            ONLY_ON_BRANCH: master
-            ONLY_ON_WORKFLOW: '*'
-            TAG_PATTERN: ''
-          command: |
-            set
-            if [ "${DEBUG}" == "true" ] ;then
-              echo "DEBUG"
-            fi
-      - use_booleans
           
           
 
 
-commands:
-  use_booleans:
-    parameters:
-      default_false:
-        type: boolean
-        default: false
-      default_true:
-        type: boolean
-        default: true
-
-    steps:
-      - run: echo "export DEBUG=<<parameters.default_true>> >> $BASH_ENV"
-      - run: 
-          shell: bash
-          name: reused command
-          command: |
-            set
-            if [ "${DEBUG}" == "true" ] ;then
-              echo "DEBUG"
-            fi
 
 
   
 workflows:
   test-deploy:
     jobs:
-      - keep-going
-      - keep-going:
-          executor: latest
-      - keep-going:
-          executor: node
-      - queue/block_workflow:
-          my-pipeline: <<pipeline.number>>
-          max-wait-time: "10"               
-          limit-branch-name: master
-          include-debug: true
-          this-branch-only: false
-          pre-steps:
-            - run: set
-            - run: |
-                if [ "${DEBUG}" == "true" ] ;then
-                  echo "DEBUG"
-                fi
-
+      - only:
+          name: do stuff
