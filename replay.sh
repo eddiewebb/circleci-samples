@@ -16,5 +16,6 @@ do
   echo "Replaying $((i)) commits ago (${TARGET})"
   #git merge 
   git checkout master
+  i=$((i-1))
 done;
 # i dont think this pushes each one..
