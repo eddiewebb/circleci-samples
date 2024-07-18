@@ -15,7 +15,7 @@ do
   git checkout ${BRANCH_NAME}
   echo "Replaying $((i)) commits ago (${TARGET})"
   git merge ${TARGET}
-  git commit --amend -m"CCI REPLAY"
+  # changes and requires auto mergegit commit --amend -m"CCI REPLAY"
   git push
   read
   git checkout master
