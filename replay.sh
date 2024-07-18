@@ -14,7 +14,7 @@ do
   TARGET=$(git log -n$((i)) --oneline | tail -1 | cut -f1 -d" ")
   git checkout ${BRANCH_NAME}
   echo "Replaying $((i)) commits ago (${TARGET})"
-  git merge ${TARGET}
+  git merge ${TARGET} -m"CCI Replay"
   # changes and requires auto mergegit commit --amend -m"CCI REPLAY"
   git push
   read
