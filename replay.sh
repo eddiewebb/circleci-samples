@@ -14,7 +14,8 @@ do
   TARGET=$(git log -n$((i)) --oneline | tail -1 | cut -f1 -d" ")
   git checkout ${BRANCH_NAME}
   echo "Replaying $((i)) commits ago (${TARGET})"
-  #git merge 
+  git merge ${TARGET}
+  read
   git checkout master
   i=$((i-1))
 done;
