@@ -1,6 +1,8 @@
 #!/bin/sh
 COMMIT_COUNT=3
 COMMIT_BEFORE_TARGET=$(git log -n$((COMMIT_COUNT+1)) --oneline | tail -1 | cut -f1 -d" ")
+
+# Make this a timestamped branch
 BRANCH_NAME=load
 git branch -d ${BRANCH_NAME} || echo "No stale branch locally"
 git push -d origin ${BRANCH_NAME}|| echo "No stale branch remotely"
@@ -17,7 +19,6 @@ do
   git merge 
   #git commit --amend -m"CCI REPLAY ${TARGET}"
   git push
-  read
   git checkout master
   i=$((i-1))
 done;
