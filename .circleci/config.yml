@@ -9,7 +9,6 @@ executors:
 jobs:
   only:
     executor: latest
-    resource_class: small
     steps:
       - run: set
       - run: |
