@@ -1,12 +1,10 @@
 version: 2.1
 
-
-
 executors:
 
   latest:
     docker:
-      - image: cimg/node:14
+      - image: cimg/node:14.21
 
 jobs:
   only:
