@@ -6,7 +6,7 @@ executors:
 
   latest:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/node:14
 
 jobs:
   only:
