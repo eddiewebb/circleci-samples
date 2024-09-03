@@ -15,7 +15,7 @@ jobs:
       - run: |
           if [ $CIRCLE_NODE_INDEX -gt 0 ]; then
             echo "USING MIRROR"
-            cat repo.list > sudo tee -o /etc/apt/sources.list
+            cat repo.list > sudo tee /etc/apt/sources.list
           fi
       - run: |
           sudo apt update
