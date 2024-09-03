@@ -3,18 +3,24 @@ version: 2.1
 executors:
 
   latest:
-    macos:
-      xcode: 15.4.0
+    docker:
+    - image: cimg/base:stable
 
 jobs:
   only:
     executor: latest
+    parallelism: 2
     steps:
       - run: set
       - run: |
-          if [ "${DEBUG}" == "true" ] ;then
-            echo "DEBUG"
+          if [ $CIRCLE_NODE_INDEX -gt 0 ]; then
+            echo "USING MIRROR"
+            cat repo.list > sudo tee -o /etc/apt/sources.list
           fi
+      - run: |
+          apt update
+      - run: |
+          apt install php nginx python3
           
           
 
