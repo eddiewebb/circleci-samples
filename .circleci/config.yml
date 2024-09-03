@@ -28,7 +28,7 @@ jobs:
           sudo apt install ./netselect_${VERSION}_${ARCH}.deb
           wget -q -O- https://launchpad.net/ubuntu/+archivemirrors > mirrors.txt
           grep -P -B8 "statusUP" mirrors.txt | grep -o -P "(f|ht)tp://[^\"]*" > filtered_mirrors.txt
-
+          sudo netselect -s10 -t20 $(cat filtered_mirrors.txt)
       - store_artifacts:
           path: filtered_mirrors.txt
 
