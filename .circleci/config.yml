@@ -18,9 +18,9 @@ jobs:
             cat repo.list > sudo tee -o /etc/apt/sources.list
           fi
       - run: |
-          apt update
+          sudo apt update
       - run: |
-          apt install php nginx python3
+          sudo apt install -y php nginx python3
           
           
 
