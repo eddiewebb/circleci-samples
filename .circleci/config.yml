@@ -9,14 +9,15 @@ executors:
 jobs:
   only:
     executor: latest
-    parallelism: 2
+    parallelism: 20
     steps:
       - run: set
       - checkout
       - run: |
           ls -la
           pwd
-          if [ $CIRCLE_NODE_INDEX -gt 0 ]; then
+          if [ $(($CIRCLE_NODE_INDEX % 2)) -eq 1 ]; then
+            # all odd containers get pinned mirror.
             echo "USING MIRROR"
             sudo cp repo.list /etc/apt/sources.list
           fi
