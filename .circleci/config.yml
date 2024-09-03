@@ -10,9 +10,9 @@ jobs:
   only:
     executor: latest
     parallelism: 2
-    working_directory: project
     steps:
       - run: set
+      - checkout
       - run: |
           ls -la
           pwd
