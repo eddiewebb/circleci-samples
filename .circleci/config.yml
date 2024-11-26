@@ -7,12 +7,12 @@ executors:
     - image: cimg/base:stable
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
       environment:
-        LISTEN_HOST: 127.0.0.1
+        LISTEN_HOST: localhost
         LISTEN_PORT: 4000
         TARGET_HOST_PORTS: localhost:5000,localhost:3000
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
       environment:
-        LISTEN_HOST: 127.0.0.1
+        LISTEN_HOST: localhost
         LISTEN_PORT: 5000
         TARGET_HOST_PORTS: localhost:4000,localhost:3000
 
