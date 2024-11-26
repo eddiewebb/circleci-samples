@@ -8,13 +8,13 @@ executors:
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
       name: bob
       environment:
-        LISTEN_HOST: 0.0.0.0
+        LISTEN_HOST: bob
         LISTEN_PORT: 4000
         TARGET_HOST_PORTS: jill:5000,localhost:3000
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
       name: jill
       environment:
-        LISTEN_HOST: 0.0.0.0
+        LISTEN_HOST: jill
         LISTEN_PORT: 5000
         TARGET_HOST_PORTS: bob:4000,localhost:3000
 
