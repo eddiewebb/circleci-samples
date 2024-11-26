@@ -23,8 +23,9 @@ jobs:
       - run: |
           sleep 5
           nc -l 0.0.0.0 3000 &
-          nc -v localhost 5000
-          nc -v localhost 4000
+          nc -w 2 -v localhost 5000
+          echo "why doesnt this run.."
+          nc -w 2 -v localhost 4000
           sleep 5
           kill %1
           
