@@ -5,18 +5,28 @@ executors:
   latest:
     docker:
     - image: cimg/base:stable
+    - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
+      environment:
+        LISTEN_HOST: 0.0.0.0
+        LISTEN_PORT: 4000
+        TARGET_HOST_PORTS: localhost:5000,localhost:3000
+    - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
+      environment:
+        LISTEN_HOST: 0.0.0.0
+        LISTEN_PORT: 5000
+        TARGET_HOST_PORTS: localhost:4000,localhost:3000
 
 jobs:
   only:
     executor: latest
     steps:
-      - run: echo "this can run concurrently"
-      - deploy: |
-          echo "this step will not"
-          sleep 30
-          echo "done"
-      - run: echo "this can run concurrently"
-
+      - run: |
+          sleep 5
+          nc -l 0.0.0.0 3000 &
+          nc -v localhost 5000
+          nc -v localhost 4000
+          sleep 5
+          kill %1
           
           
 
