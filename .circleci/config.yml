@@ -9,25 +9,14 @@ executors:
 jobs:
   only:
     executor: latest
-    parallelism: 20
     steps:
-      - run: set
-      - checkout
-      - run: |
-          ls -la
-          pwd
-          if [ $(($CIRCLE_NODE_INDEX % 2)) -eq 1 ]; then
-            # all odd containers get pinned mirror.
-            echo "USING MIRROR"
-            sudo cp repo.list /etc/apt/sources.list
-          fi
-      - store_artifacts:
-          path: filtered_mirrors.txt
+      - run: echo "this can run concurrently"
+      - deploy: |
+          echo "this step will not"
+          sleep 30
+          echo "done"
+      - run: echo "this can run concurrently"
 
-      - run: |
-          sudo apt update
-      - run: |
-          sudo apt install -y php nginx python3
           
           
 
