@@ -6,15 +6,17 @@ executors:
     docker:
     - image: cimg/base:stable
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
+      name: bob
       environment:
         LISTEN_HOST: 0.0.0.0
         LISTEN_PORT: 4000
-        TARGET_HOST_PORTS: localhost:5000,localhost:3000
+        TARGET_HOST_PORTS: jill:5000,localhost:3000
     - image: docker.nexus.namer.circleci-fieldeng.com/eddie/talktome
+      name: jill
       environment:
         LISTEN_HOST: 0.0.0.0
         LISTEN_PORT: 5000
-        TARGET_HOST_PORTS: localhost:4000,localhost:3000
+        TARGET_HOST_PORTS: bob:4000,localhost:3000
 
 jobs:
   only:
@@ -26,8 +28,8 @@ jobs:
           background: true
       - run: |
           sleep 10
-          nc -w 2 -v localhost 5000 || echo "nope"
-          nc -w 2 -v localhost 4000 || echo "nope"
+          nc -w 2 -v jill 5000 || echo "nope"
+          nc -w 2 -v bob 4000 || echo "nope"
           sleep 10
           
           
