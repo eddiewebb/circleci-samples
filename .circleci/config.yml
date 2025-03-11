@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  queue: eddiewebb/queue@3.3.2
+
 executors:
 
   latest:
@@ -11,13 +14,11 @@ jobs:
   only:
     executor: latest
     steps:
-      - run: echo "this can run concurrently"
-      - run: |
-          echo "this step will not"
-          sleep 30
-          echo "done"
-      - run: echo "this can run concurrently"
-
+      - queue/until_front_of_line:
+          limit-branch-name: main
+          max-wait-time: '10'
+          my-pipeline: <<pipeline.number>>
+      - run: echo "this can not run concurrently"
           
           
 
@@ -26,9 +27,9 @@ workflows:
   pass:
     jobs:
       - only
-  fail:
-    jobs:
-      - only:
-         context: [only_one_workflow]
+  # fail:
+  #   jobs:
+  #     - only:
+  #        context: [only_one_workflow]
         
 
