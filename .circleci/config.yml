@@ -29,6 +29,6 @@ workflows:
   fail:
     jobs:
       - only:
-         context: [bogusname]
+         context: [only_one_workflow]
         
 
