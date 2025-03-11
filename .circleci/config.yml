@@ -6,12 +6,13 @@ executors:
     docker:
     - image: cimg/base:stable
 
+
 jobs:
   only:
     executor: latest
     steps:
       - run: echo "this can run concurrently"
-      - deploy: |
+      - run: |
           echo "this step will not"
           sleep 30
           echo "done"
@@ -21,11 +22,13 @@ jobs:
           
 
 
-
-
-  
 workflows:
-  test-deploy:
+  pass:
+    jobs:
+      - only
+  fail:
     jobs:
       - only:
-          name: do stuff
+         context: [bogusname]
+        
+
