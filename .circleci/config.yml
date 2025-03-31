@@ -4,7 +4,9 @@ orbs:
   queue: eddiewebb/queue@3.3.3
 
 executors:
-
+  ecr:
+    docker:
+    - image: public.ecr.aws/docker/library/alpine:latest
   latest:
     docker:
     - image: cimg/base:stable
@@ -12,7 +14,11 @@ executors:
 
 jobs:
   only:
-    executor: latest
+    parameters:
+      image:
+        type: executor
+
+    executor: <<parameters.image>>
     steps:
       - queue/until_front_of_line:
           limit-branch-name: main
@@ -26,7 +32,10 @@ jobs:
 workflows:
   pass:
     jobs:
-      - only
+      - only:
+          matrix:
+            parameters:
+              image: [latest, ecr]
   # fail:
   #   jobs:
   #     - only:
