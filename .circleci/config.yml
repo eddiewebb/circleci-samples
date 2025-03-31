@@ -6,7 +6,7 @@ orbs:
 executors:
   ecr:
     docker:
-    - image: public.ecr.aws/docker/library/alpine:latest
+    - image: public.ecr.aws/docker/library/bash:devel-alpine3.21
   latest:
     docker:
     - image: cimg/base:stable
