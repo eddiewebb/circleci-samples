@@ -18,7 +18,6 @@ workflows:
     jobs:
       - only:
           name: run-concurent
-          matrix:
       - only:
           name: serial-a
           requires: [run-concurent]
