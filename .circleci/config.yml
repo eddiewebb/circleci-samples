@@ -1,16 +1,5 @@
 version: 2.1
 
-orbs:
-  queue: eddiewebb/queue@3.3.3
-
-executors:
-  ecr:
-    docker:
-    - image: public.ecr.aws/docker/library/bash:devel-alpine3.21
-  latest:
-    docker:
-    - image: cimg/base:stable
-
 
 jobs:
   only:
@@ -30,9 +19,6 @@ workflows:
       - only:
           name: run-concurent
           matrix:
-            
-            parameters:
-              image: [latest]
       - only:
           name: serial-a
           requires: [run-concurent]
