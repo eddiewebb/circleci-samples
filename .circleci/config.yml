@@ -20,7 +20,9 @@ jobs:
 
     executor: <<parameters.image>>
     steps:
-      - run: echo "this can not run concurrently"
+      - run: |
+          echo "this can not run concurrently"
+          sleep 30
           
           
 
@@ -34,21 +36,21 @@ workflows:
           matrix:
             
             parameters:
-              image: [latest, ecr]
+              image: [latest]
       - only:
           name: <<matrix.image>>-serial-a
           requires: [<<matrix.image>>-run-concurent]
           serial-group: group-a<<matrix.image>>
           matrix:
             parameters:
-              image: [latest, ecr]
+              image: [latest]
       - only:
           name: <<matrix.image>>-serial-b
           serial-group: group-a<<matrix.image>>
           requires: [<<matrix.image>>-serial-a]
           matrix:
             parameters:
-              image: [latest, ecr]
+              image: [latest]
               
   # fail:
   #   jobs:
