@@ -32,7 +32,6 @@ workflows:
     jobs:
       - only:
           name: <<matrix.image>>-run-concurent
-          serial-group: group-a<<matrix.image>>
           matrix:
             
             parameters:
