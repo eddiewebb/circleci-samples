@@ -29,14 +29,15 @@ workflows:
   pass:
     jobs:
       - only:
-          name: run-concurent
+          name: <<matrix.image>>-run-concurent
           serial-group: group-a<<matrix.image>>
           matrix:
+            
             parameters:
               image: [latest, ecr]
       - only:
           name: <<matrix.image>>-serial-a
-          requires: [run-concurrent]
+          requires: [<<matrix.image>>-run-concurent]
           serial-group: group-a<<matrix.image>>
           matrix:
             parameters:
