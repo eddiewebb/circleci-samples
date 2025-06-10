@@ -20,10 +20,6 @@ jobs:
 
     executor: <<parameters.image>>
     steps:
-      - queue/until_front_of_line:
-          limit-branch-name: main
-          max-wait-time: '10'
-          my-pipeline: <<pipeline.number>>
       - run: echo "this can not run concurrently"
           
           
@@ -33,9 +29,26 @@ workflows:
   pass:
     jobs:
       - only:
+          name: run-concurent
+          serial-group: group-a<<matrix.image>>
           matrix:
             parameters:
               image: [latest, ecr]
+      - only:
+          name: <<matrix.image>>-serial-a
+          requires: [run-concurrent]
+          serial-group: group-a<<matrix.image>>
+          matrix:
+            parameters:
+              image: [latest, ecr]
+      - only:
+          name: <<matrix.image>>-serial-b
+          serial-group: group-a<<matrix.image>>
+          requires: [<<matrix.image>>-serial-a]
+          matrix:
+            parameters:
+              image: [latest, ecr]
+              
   # fail:
   #   jobs:
   #     - only:
