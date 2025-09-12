@@ -27,8 +27,9 @@ jobs:
 workflows:
   pass:
     jobs:
-      - only:
+      - approval:
           name: run-concurent
+          type: approval
       - only:
           name: serial-a
           requires: [run-concurent]
