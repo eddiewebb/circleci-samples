@@ -34,7 +34,7 @@ workflows:
           name: serial-a
           requires: [run-concurent]
           serial-group: group-a
-          contexts: [restricted]
+          context: [restricted]
       - only:
           name: serial-b
           serial-group: group-a
