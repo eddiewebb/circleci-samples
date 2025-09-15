@@ -14,26 +14,96 @@ executors:
 
 jobs:
   only:
-
     executor: latest
     steps:
-      - run: |
-          echo "this can not run concurrently"
-          sleep 10
-          
-          
+      - run:
+          name: "Install jq"
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y jq
+      - run:
+          name: "Get task token from socket"
+          command: |
+            TASK_TOKEN_SOCKET="/tmp/circleci-ts.sock"
+            
+            if [ ! -S "$TASK_TOKEN_SOCKET" ]; then
+              echo "ERROR: Task token socket not found at $TASK_TOKEN_SOCKET"
+              exit 1
+            fi
+            
+            SOCKET_RESPONSE=$(echo "get_token" | nc -U "$TASK_TOKEN_SOCKET")
+            
+            if [ -z "$SOCKET_RESPONSE" ]; then
+              echo "ERROR: Failed to get response from socket"
+              exit 1
+            fi
+            
+            if ! echo "$SOCKET_RESPONSE" | jq empty 2>/dev/null; then
+              echo "ERROR: Invalid JSON response from socket"
+              echo "Response: $SOCKET_RESPONSE"
+              exit 1
+            fi
+            
+            TASK_TOKEN=$(echo "$SOCKET_RESPONSE" | jq -r '.token')
+            
+            if [ -z "$TASK_TOKEN" ] || [ "$TASK_TOKEN" = "null" ]; then
+              echo "ERROR: No task token in socket response"
+              exit 1
+            fi
+            
+            echo "Task token obtained"
+            echo "TASK_TOKEN=$TASK_TOKEN" >> $BASH_ENV
+      - run:
+          name: "Exchange task token for CircleCI token"
+          command: |
+            echo "Exchanging task token for CircleCI token..."
+            CIRCLE_TOKEN_RESPONSE=$(curl -s -X POST \
+              -H "Authorization: bearer $TASK_TOKEN" \
+              "https://circleci.com/api/v2/user/access-token")
+            
+            if ! echo "$CIRCLE_TOKEN_RESPONSE" | jq empty 2>/dev/null; then
+              echo "ERROR: Failed to exchange task token for token"
+              echo "Response: $CIRCLE_TOKEN_RESPONSE"
+              exit 1
+            fi
+            
+            CIRCLE_TOKEN=$(echo "$CIRCLE_TOKEN_RESPONSE" | jq -r '.token')
+            
+            if [ -z "$CIRCLE_TOKEN" ] || [ "$CIRCLE_TOKEN" = "null" ]; then
+              echo "ERROR: Invalid CircleCI token in response"
+              exit 1
+            fi
+            
+            echo "CircleCI token obtained"
+            echo "CIRCLE_TOKEN=$CIRCLE_TOKEN" >> $BASH_ENV
+      - run:
+          name: beat up APIs
+          command: |
+            function hitit {
+              http_code=`curl -Ls -H "Circle-Token: $CIRCLE_TOKEN" \
+                -o /dev/null -w "%{response_code}" \
+                "$1"`
+              if [ "$http_code" != "200" ]; then
+                echo "API call to $1 failed with code $http_code"
+              else
+                echo "Success $http_code to $1"
+              fi 
+            }
+
+            hitit "https://google.com"
+            hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+            hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/checkout-key"
+            hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/settings"
+            hitit "https://circleci.com/api/v2/me"
+            hitit "https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
+            hitit "https://circleci.com//api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/tree/$(urlencode "$CIRCLE_BRANCH")"
 
 
 workflows:
   pass:
     jobs:
-      - approval:
-          name: run-concurent
-          type: approval
       - only:
           name: serial-a
-          requires: [run-concurent]
-          context: [restricted]
   # fail:
   #   jobs:
   #     - only:
