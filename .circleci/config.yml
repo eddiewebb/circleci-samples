@@ -96,8 +96,14 @@ jobs:
             hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/settings"
             hitit "https://circleci.com/api/v2/me"
             hitit "https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
-            hitit "https://circleci.com//api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/tree/$(urlencode "$CIRCLE_BRANCH")"
-
+            hitit "https://circleci.com/api/v1.1/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/tree/master"
+            hitit "https://circleci.com/api/v2/pipeline"
+            hitit "https://circleci.com/api/v2/project/${VCS_TYPE}/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/job/${CIRCLE_BUILD_NUM}"
+            hitit "https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}"
+            hitit "https://circleci.com/api/v2/deploy/environments"
+            hitit "https://circleci.com/api/v2/projects/${CIRCLE_PROJECT_ID}/pipeline-definitions"
+            hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule"
+            
 
 workflows:
   pass:
