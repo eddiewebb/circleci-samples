@@ -76,11 +76,12 @@ jobs:
           command: |
             function hitit {
               http_code=`curl -Ls -H "Circle-Token: $CIRCLE_TOKEN" \
-                -o /dev/null -w "%{response_code}" \
+                -o response.txt -w "%{response_code}" \
                 "$1"`
               if [ "$http_code" != "200" ]; then
                 echo "API call to $1 failed with code $http_code"
                 echo "$http_code $1" >> failures.txt
+                cat response.txt
               else
                 echo "Success $http_code to $1"
               fi 
