@@ -85,6 +85,7 @@ jobs:
                 echo -e "\n\n"
               else
                 echo "Success $http_code to $1"
+                echo "$http_code $1" >> successes.txt
               fi 
             }
             export project_slug="gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}"
@@ -105,6 +106,9 @@ jobs:
             hitit "https://circleci.com/api/v2/insights/${project_slug}/flaky-tests"
             echo "FAILED URLS"
             cat failures.txt
+
+            echo "successful"
+            cat successes.txt
 workflows:
   pass:
     jobs:
