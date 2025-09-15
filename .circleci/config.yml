@@ -102,7 +102,7 @@ jobs:
             hitit "https://circleci.com/api/v2/deploy/environments"
             hitit "https://circleci.com/api/v2/projects/${CIRCLE_PROJECT_ID}/pipeline-definitions"
             hitit "https://circleci.com/api/v2/project/${project_slug}/schedule"
-            hitit "https://circleci.com/api/v2/insights/{project_slug}/flaky-tests"
+            hitit "https://circleci.com/api/v2/insights/${project_slug}/flaky-tests"
             echo "FAILED URLS"
             cat failures.txt
 workflows:
