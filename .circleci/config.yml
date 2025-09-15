@@ -17,11 +17,6 @@ jobs:
     executor: latest
     steps:
       - run:
-          name: "Install jq"
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y jq
-      - run:
           name: "Get task token from socket"
           command: |
             TASK_TOKEN_SOCKET="/tmp/circleci-ts.sock"
@@ -85,6 +80,7 @@ jobs:
                 "$1"`
               if [ "$http_code" != "200" ]; then
                 echo "API call to $1 failed with code $http_code"
+                echo "$http_code $1" >> failures.txt
               else
                 echo "Success $http_code to $1"
               fi 
@@ -104,7 +100,8 @@ jobs:
             hitit "https://circleci.com/api/v2/projects/${CIRCLE_PROJECT_ID}/pipeline-definitions"
             hitit "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/schedule"
             
-
+            echo "FAILED URLS"
+            cat failures.txt
 workflows:
   pass:
     jobs:
